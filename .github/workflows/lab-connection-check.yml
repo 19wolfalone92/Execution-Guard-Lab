@@ -59,6 +59,17 @@ jobs:
               if not isinstance(result, dict):
                   return False
               identity["id"] = result.get("id")
+              from datetime import datetime, timezone
+              expiry = result.get("expires_on")
+              print("VERIFY_EXPIRY_PRESENT=" + str(bool(expiry)).lower())
+              if isinstance(expiry, str):
+                  try:
+                      expires = datetime.fromisoformat(expiry.replace("Z", "+00:00"))
+                      seconds = (expires - datetime.now(timezone.utc)).total_seconds()
+                      print("VERIFY_EXPIRY_UTC=" + expires.astimezone(timezone.utc).isoformat())
+                      print("VERIFY_EXPIRY_WITHIN_31_DAYS=" + str(0 < seconds <= 31*86400).lower())
+                  except (ValueError, TypeError):
+                      print("VERIFY_EXPIRY_PARSE=UNVERIFIED")
               return result.get("status") == "active"
           active = probe("TOKEN_ACTIVE", token_path, capture_token)
           matched = probe("ACCOUNT_MATCH", prefix, lambda x: isinstance(x, dict) and str(x.get("id", "")).lower() == account.lower())
@@ -66,6 +77,14 @@ jobs:
               sys.exit(1)
           workers = probe("WORKERS_LIST_READ", prefix + "/workers/scripts", lambda x: isinstance(x, list))
           probe("WORKERS_SUBDOMAIN_READ", prefix + "/workers/subdomain")
+          def check_account_list(result):
+              if not isinstance(result, list):
+                  return False
+              ids = {str(x.get("id", "")).lower() for x in result if isinstance(x, dict)}
+              print("VISIBLE_ACCOUNTS_FIRST_PAGE_COUNT=" + str(len(ids)))
+              print("VISIBLE_ACCOUNTS_FIRST_PAGE_TARGET_ONLY=" + str(ids == {account.lower()}).lower())
+              return account.lower() in ids
+          probe("ACCOUNT_LIST_READ", "/accounts?per_page=50", check_account_list)
           probe("OPTIONAL_KV_READ", prefix + "/storage/kv/namespaces")
           probe("OPTIONAL_D1_READ", prefix + "/d1/database")
           probe("OPTIONAL_R2_READ", prefix + "/r2/buckets")
