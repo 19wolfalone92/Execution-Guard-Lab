@@ -115,6 +115,15 @@ jobs:
               condition = result.get("condition") or {}
               print("TOKEN_IP_FILTER_CONFIGURED=" + str(bool(condition.get("request_ip")) if isinstance(condition, dict) else False).lower())
               print("TOKEN_POLICY_SCOPE_METADATA_PRESENT=true")
+              known_names = set().union(*known_groups.values())
+              expected = set().union(*(known_groups[k] for k in ("WORKERS_WRITE", "WORKERS_TAIL", "KV_WRITE", "ACCOUNT_READ")))
+              granted = {str(g.get("name", "")).lower() for p in allow_policies for g in p.get("permission_groups", []) if isinstance(g, dict)}
+              extra = granted - expected
+              print("UNEXPECTED_ALLOW_GROUP_COUNT=" + str(len(extra)))
+              print("UNKNOWN_ALLOW_GROUP_COUNT=" + str(len(granted - known_names)))
+              print("TARGET_ACCOUNT_ONLY=" + str(bool(allow_policies) and kinds == {"target_account"}).lower())
+              print("BASELINE_REQUIRED_GROUPS_PRESENT=" + str(all(bool(granted & known_groups[k]) for k in ("WORKERS_WRITE", "ACCOUNT_READ"))).lower())
+              print("POLICY_MINIMUM_SCOPE_CHECK=" + ("PASS" if allow_policies and kinds == {"target_account"} and not extra and bool(result.get("expires_on")) and all(bool(granted & known_groups[k]) for k in ("WORKERS_WRITE", "ACCOUNT_READ")) else "NOT_CONFIRMED"))
               return True
           token_id = identity.get("id")
           if isinstance(token_id, str) and re.fullmatch(r"[a-fA-F0-9]{32}", token_id):
