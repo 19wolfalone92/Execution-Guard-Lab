@@ -33,23 +33,23 @@
     },
     {
       "id": "G",
-      "state": "BLOCKED",
-      "reason": "GitHub Actions resolved and installed the full pinned graph; pip check, exact runtime preflight and MCP SDK import passed. The first audit found pytest 9.0.2 vulnerable; candidate raised to 9.2.0 and requires a clean rerun."
+      "state": "PASS",
+      "evidence": "GitHub Actions clean Python 3.13 environment installed the full requirements.lock using --require-hashes; pip check and exact runtime preflight passed."
     },
     {
       "id": "H",
-      "state": "BLOCKED",
-      "reason": "First pip-audit found GHSA-6w46-j5rx-g56g / CVE-2025-71176 in pytest 9.0.2. Candidate now pins pytest 9.2.0; a second audit is pending."
+      "state": "PASS",
+      "evidence": "pip-audit --strict audited 35 resolved packages: 0 vulnerable packages and 0 vulnerability records. The initial pytest 9.0.2 finding was fixed by pinning pytest 9.2.0."
     },
     {
       "id": "I",
       "state": "PASS",
-      "evidence": "Existing complete test suite reproduced locally: 364/364 PASS."
+      "evidence": "Updated locked dependency environment: 364 tests, 0 failures, 0 errors, 0 skipped; 3.682 seconds."
     },
     {
       "id": "J",
-      "state": "UNVERIFIED",
-      "reason": "New SDK v2 qualification code and CI tests are prepared but have not run."
+      "state": "PASS",
+      "evidence": "Extended regression suite covers duplicate JSON keys, NaN/Infinity, malformed UTF-8, nested input, duplicate ZIP paths, path traversal, symlinks, archive expansion/size bounds, corrupt deflate, no import-time side effects, transport/auth negatives, size limits and parallel/reconnect. Official SDK probe additionally ran positive and negative cases for all 23 tools twice."
     },
     {
       "id": "K",
@@ -58,8 +58,8 @@
     },
     {
       "id": "L",
-      "state": "BLOCKED",
-      "reason": "Official MCP SDK 2.3.0 and httpx2 2.16.2 installed and imported successfully in GitHub Actions, but initialize/tools/list/tools/call have not yet been executed."
+      "state": "PASS",
+      "evidence": "Official MCP Python SDK 2.3.0 over Streamable HTTP/loopback TLS negotiated protocol 2025-11-25; 23/23 discovered; 23/23 positive and 23/23 negative calls in each of two sessions; 4 parallel calls per session; unknown tool rejected; 96 assertions PASS."
     },
     {
       "id": "M",
@@ -148,8 +148,8 @@
     },
     {
       "id": "AD",
-      "state": "PASS",
-      "evidence": "Source archive identity, test results, dependency findings, Cloudflare read-only diagnostics and gate ledger are recorded in the 0.4.0 candidate artifacts and Execution Guard checkpoint."
+      "state": "UNVERIFIED",
+      "reason": "Qualification evidence files and CI run artifacts are preserved; the final 0.4.0 Execution Guard checkpoint has not yet been written."
     },
     {
       "id": "AE",

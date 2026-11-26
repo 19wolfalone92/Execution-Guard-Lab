@@ -39,6 +39,7 @@ jobs:
         run: |
           pip-compile --resolver=backtracking --generate-hashes --output-file requirements.lock requirements-lock-v2.in
           test -s requirements.lock
+          git diff --exit-code -- requirements.lock
 
       - name: Install the locked graph in a clean virtual environment
         run: |
