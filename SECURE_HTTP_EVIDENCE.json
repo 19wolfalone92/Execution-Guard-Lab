@@ -1,0 +1,5303 @@
+{
+  "scope": "synthetic loopback HTTPS only; authorization header and JWT values excluded",
+  "records": [
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[text_sha256]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-text_sha256",
+        "params": {
+          "name": "text_sha256",
+          "arguments": {
+            "text": "abc"
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-text_sha256",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"sha256\": \"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\"}"
+            }
+          ],
+          "structuredContent": {
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[evidence_bundle_verify]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-evidence_bundle_verify",
+        "params": {
+          "name": "evidence_bundle_verify",
+          "arguments": {
+            "items": [
+              {
+                "id": "x",
+                "text": "abc",
+                "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+              }
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-evidence_bundle_verify",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"all_match\": true, \"items\": [{\"id\": \"x\", \"matches\": true}], \"scope\": \"supplied_text_integrity_only\"}"
+            }
+          ],
+          "structuredContent": {
+            "all_match": true,
+            "items": [
+              {
+                "id": "x",
+                "matches": true
+              }
+            ],
+            "scope": "supplied_text_integrity_only"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[acceptance_evaluate]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-acceptance_evaluate",
+        "params": {
+          "name": "acceptance_evaluate",
+          "arguments": {
+            "criteria": [
+              {
+                "id": "A",
+                "status": "PASS",
+                "evidence_text": "abc",
+                "evidence_sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+              }
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-acceptance_evaluate",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"criteria\": [{\"id\": \"A\", \"status\": \"PASS\", \"digest_matches\": true}], \"declared_pass_with_matching_digest\": true, \"scope\": \"declarations_and_digest_only_not_independent_acceptance\"}"
+            }
+          ],
+          "structuredContent": {
+            "criteria": [
+              {
+                "id": "A",
+                "status": "PASS",
+                "digest_matches": true
+              }
+            ],
+            "declared_pass_with_matching_digest": true,
+            "scope": "declarations_and_digest_only_not_independent_acceptance"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[workflow_validate]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-workflow_validate",
+        "params": {
+          "name": "workflow_validate",
+          "arguments": {
+            "steps": [
+              {
+                "id": "b",
+                "depends_on": [
+                  "a"
+                ]
+              },
+              {
+                "id": "a",
+                "depends_on": []
+              }
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-workflow_validate",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"valid\": true, \"topological_order\": [\"a\", \"b\"], \"reason\": null}"
+            }
+          ],
+          "structuredContent": {
+            "valid": true,
+            "topological_order": [
+              "a",
+              "b"
+            ],
+            "reason": null
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[test_results_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-test_results_analyze",
+        "params": {
+          "name": "test_results_analyze",
+          "arguments": {
+            "results": [
+              {
+                "id": "x",
+                "status": "PASS"
+              }
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-test_results_analyze",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"counts\": {\"PASS\": 1, \"FAIL\": 0, \"SKIP\": 0, \"UNVERIFIED\": 0, \"BLOCKED\": 0}, \"all_reported_pass\": true, \"scope\": \"supplied_results_only\"}"
+            }
+          ],
+          "structuredContent": {
+            "counts": {
+              "PASS": 1,
+              "FAIL": 0,
+              "SKIP": 0,
+              "UNVERIFIED": 0,
+              "BLOCKED": 0
+            },
+            "all_reported_pass": true,
+            "scope": "supplied_results_only"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[snapshot_compare]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-snapshot_compare",
+        "params": {
+          "name": "snapshot_compare",
+          "arguments": {
+            "before": [
+              {
+                "key": "a",
+                "value": "1"
+              }
+            ],
+            "after": [
+              {
+                "key": "a",
+                "value": "2"
+              }
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-snapshot_compare",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"added\": [], \"removed\": [], \"changed\": [\"a\"]}"
+            }
+          ],
+          "structuredContent": {
+            "added": [],
+            "removed": [],
+            "changed": [
+              "a"
+            ]
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[blocker_classify]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-blocker_classify",
+        "params": {
+          "name": "blocker_classify",
+          "arguments": {
+            "code": "POLICY_DENIED"
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-blocker_classify",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"category\": \"policy\", \"recommendation\": \"stop_and_seek_official_resolution\", \"executes_retry\": false}"
+            }
+          ],
+          "structuredContent": {
+            "category": "policy",
+            "recommendation": "stop_and_seek_official_resolution",
+            "executes_retry": false
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[release_consistency]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-release_consistency",
+        "params": {
+          "name": "release_consistency",
+          "arguments": {
+            "expected_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "checks": [
+              {
+                "id": "x",
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "status": "PASS"
+              }
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-release_consistency",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"checks\": [{\"id\": \"x\", \"matches_sha\": true, \"reported_pass\": true}], \"consistent\": true, \"scope\": \"supplied_metadata_only_not_live_ci\"}"
+            }
+          ],
+          "structuredContent": {
+            "checks": [
+              {
+                "id": "x",
+                "matches_sha": true,
+                "reported_pass": true
+              }
+            ],
+            "consistent": true,
+            "scope": "supplied_metadata_only_not_live_ci"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[math_calculate]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-math_calculate",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "divide",
+            "a": 12,
+            "b": 4
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-math_calculate",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 3.0}"
+            }
+          ],
+          "structuredContent": {
+            "result": 3.0
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[statistics_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-statistics_analyze",
+        "params": {
+          "name": "statistics_analyze",
+          "arguments": {
+            "values": [
+              1,
+              2,
+              3
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-statistics_analyze",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"count\": 3, \"mean\": 2, \"median\": 2, \"population_stddev\": 0.816496580927726, \"min\": 1, \"max\": 3}"
+            }
+          ],
+          "structuredContent": {
+            "count": 3,
+            "mean": 2,
+            "median": 2,
+            "population_stddev": 0.816496580927726,
+            "min": 1,
+            "max": 3
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[correlation_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-correlation_analyze",
+        "params": {
+          "name": "correlation_analyze",
+          "arguments": {
+            "x": [
+              1,
+              2,
+              3
+            ],
+            "y": [
+              6,
+              4,
+              2
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-correlation_analyze",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"pearson_r\": -1.0, \"count\": 3}"
+            }
+          ],
+          "structuredContent": {
+            "pearson_r": -1.0,
+            "count": 3
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[regression_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-regression_analyze",
+        "params": {
+          "name": "regression_analyze",
+          "arguments": {
+            "x": [
+              1,
+              2,
+              3
+            ],
+            "y": [
+              3,
+              5,
+              7
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-regression_analyze",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"slope\": 2.0, \"intercept\": 1.0, \"r_squared\": 1.0, \"count\": 3}"
+            }
+          ],
+          "structuredContent": {
+            "slope": 2.0,
+            "intercept": 1.0,
+            "r_squared": 1.0,
+            "count": 3
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[numerical_compare]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-numerical_compare",
+        "params": {
+          "name": "numerical_compare",
+          "arguments": {
+            "actual": 100,
+            "expected": 101,
+            "absolute_tolerance": 1,
+            "relative_tolerance": 0
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-numerical_compare",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"matches\": true, \"absolute_error\": 1, \"limit\": 1}"
+            }
+          ],
+          "structuredContent": {
+            "matches": true,
+            "absolute_error": 1,
+            "limit": 1
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[time_series_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-time_series_analyze",
+        "params": {
+          "name": "time_series_analyze",
+          "arguments": {
+            "values": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "window": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-time_series_analyze",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"moving_average\": [1.5, 2.5, 3.5], \"changes\": [1, 1, 1], \"window\": 2}"
+            }
+          ],
+          "structuredContent": {
+            "moving_average": [
+              1.5,
+              2.5,
+              3.5
+            ],
+            "changes": [
+              1,
+              1,
+              1
+            ],
+            "window": 2
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[dataset_validate]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-dataset_validate",
+        "params": {
+          "name": "dataset_validate",
+          "arguments": {
+            "expected": [
+              "a",
+              "b"
+            ],
+            "observed": [
+              "a"
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-dataset_validate",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"missing\": [\"b\"], \"unexpected\": [], \"matched\": [\"a\"], \"complete\": false, \"scope\": \"supplied_identifiers_only\"}"
+            }
+          ],
+          "structuredContent": {
+            "missing": [
+              "b"
+            ],
+            "unexpected": [],
+            "matched": [
+              "a"
+            ],
+            "complete": false,
+            "scope": "supplied_identifiers_only"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[completion_verify]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-completion_verify",
+        "params": {
+          "name": "completion_verify",
+          "arguments": {
+            "required": [
+              "A",
+              "B"
+            ],
+            "observed": [
+              {
+                "id": "A",
+                "status": "PASS"
+              }
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-completion_verify",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"missing\": [\"B\"], \"unexpected\": [], \"not_passed\": [\"B\"], \"declared_complete\": false, \"scope\": \"supplied_statuses_not_independent_proof\"}"
+            }
+          ],
+          "structuredContent": {
+            "missing": [
+              "B"
+            ],
+            "unexpected": [],
+            "not_passed": [
+              "B"
+            ],
+            "declared_complete": false,
+            "scope": "supplied_statuses_not_independent_proof"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[regression_detect]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-regression_detect",
+        "params": {
+          "name": "regression_detect",
+          "arguments": {
+            "before": [
+              {
+                "id": "A",
+                "status": "PASS"
+              }
+            ],
+            "after": [
+              {
+                "id": "A",
+                "status": "FAIL"
+              }
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-regression_detect",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"regressed\": [\"A\"], \"improved\": [], \"missing\": [], \"new\": [], \"scope\": \"supplied_test_statuses_only\"}"
+            }
+          ],
+          "structuredContent": {
+            "regressed": [
+              "A"
+            ],
+            "improved": [],
+            "missing": [],
+            "new": [],
+            "scope": "supplied_test_statuses_only"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[code_structure_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-code_structure_analyze",
+        "params": {
+          "name": "code_structure_analyze",
+          "arguments": {
+            "source": "import os\ndef f(x):\n if x: return 1\n"
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-code_structure_analyze",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"syntax_valid\": true, \"nodes\": 11, \"functions\": 1, \"branch_nodes\": 1, \"import_roots\": [\"os\"], \"scope\": \"python_ast_only_not_execution_or_full_complexity\"}"
+            }
+          ],
+          "structuredContent": {
+            "syntax_valid": true,
+            "nodes": 11,
+            "functions": 1,
+            "branch_nodes": 1,
+            "import_roots": [
+              "os"
+            ],
+            "scope": "python_ast_only_not_execution_or_full_complexity"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[artifact_checksum]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-artifact_checksum",
+        "params": {
+          "name": "artifact_checksum",
+          "arguments": {
+            "data_base64": "YWJj",
+            "expected_sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-artifact_checksum",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"bytes\": 3, \"sha256\": \"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\", \"matches\": true, \"scope\": \"supplied_bytes_only\"}"
+            }
+          ],
+          "structuredContent": {
+            "bytes": 3,
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "matches": true,
+            "scope": "supplied_bytes_only"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[archive_validate]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-archive_validate",
+        "params": {
+          "name": "archive_validate",
+          "arguments": {
+            "data_base64": "UEsDBBQAAAAIAAAAIQCGphA2BwAAAAUAAAAFAAAAYS50eHTLSM3JyQcAUEsBAhQDFAAAAAgAAAAhAIamEDYHAAAABQAAAAUAAAAAAAAAAAAAAIABAAAAAGEudHh0UEsFBgAAAAABAAEAMwAAACoAAAAAAA=="
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-archive_validate",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"valid\": true, \"entries\": 1, \"expanded_bytes\": 5, \"issues\": [], \"scope\": \"bounded_zip_structure_and_crc_not_malware_scan\"}"
+            }
+          ],
+          "structuredContent": {
+            "valid": true,
+            "entries": 1,
+            "expanded_bytes": 5,
+            "issues": [],
+            "scope": "bounded_zip_structure_and_crc_not_malware_scan"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[equity_drawdown_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-equity_drawdown_analyze",
+        "params": {
+          "name": "equity_drawdown_analyze",
+          "arguments": {
+            "equity": [
+              100,
+              120,
+              90,
+              110
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-equity_drawdown_analyze",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"max_drawdown_fraction\": 0.25, \"peak_index\": 1, \"trough_index\": 2, \"scope\": \"supplied_equity_curve_only\"}"
+            }
+          ],
+          "structuredContent": {
+            "max_drawdown_fraction": 0.25,
+            "peak_index": 1,
+            "trough_index": 2,
+            "scope": "supplied_equity_curve_only"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[exam_results_compare]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-exam_results_compare",
+        "params": {
+          "name": "exam_results_compare",
+          "arguments": {
+            "reference": [
+              "a",
+              "b"
+            ],
+            "predicted": [
+              "a",
+              "c"
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-exam_results_compare",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"correct\": 1, \"total\": 2, \"accuracy\": 0.5, \"mismatch_indices\": [1], \"scope\": \"exact_label_match_not_exam_independence\"}"
+            }
+          ],
+          "structuredContent": {
+            "correct": 1,
+            "total": 2,
+            "accuracy": 0.5,
+            "mismatch_indices": [
+              1
+            ],
+            "scope": "exact_label_match_not_exam_independence"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_tools[workflow_readiness]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "tool-workflow_readiness",
+        "params": {
+          "name": "workflow_readiness",
+          "arguments": {
+            "steps": [
+              {
+                "id": "a",
+                "depends_on": [],
+                "status": "PASS"
+              },
+              {
+                "id": "b",
+                "depends_on": [
+                  "a"
+                ],
+                "status": "PENDING"
+              }
+            ]
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "tool-workflow_readiness",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"graph_valid\": true, \"ready\": [\"b\"], \"inconsistent\": [], \"scope\": \"supplied_graph_only_no_execution\"}"
+            }
+          ],
+          "structuredContent": {
+            "graph_valid": true,
+            "ready": [
+              "b"
+            ],
+            "inconsistent": [],
+            "scope": "supplied_graph_only_no_execution"
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[text_sha256]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "text_sha256",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[evidence_bundle_verify]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "evidence_bundle_verify",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[acceptance_evaluate]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "acceptance_evaluate",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[workflow_validate]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "workflow_validate",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[test_results_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "test_results_analyze",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[snapshot_compare]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "snapshot_compare",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[blocker_classify]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "blocker_classify",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[release_consistency]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "release_consistency",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[math_calculate]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "math_calculate",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[statistics_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "statistics_analyze",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[correlation_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "correlation_analyze",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[regression_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "regression_analyze",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[numerical_compare]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "numerical_compare",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[time_series_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "time_series_analyze",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[dataset_validate]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "dataset_validate",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[completion_verify]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "completion_verify",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[regression_detect]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "regression_detect",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[code_structure_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "code_structure_analyze",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[artifact_checksum]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "artifact_checksum",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[archive_validate]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "archive_validate",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[equity_drawdown_analyze]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "equity_drawdown_analyze",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[exam_results_compare]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "exam_results_compare",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_tls_all_invalid[workflow_readiness]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 2,
+        "params": {
+          "name": "workflow_readiness",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "invalid_arguments"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_discover_and_lifecycle",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "initialize",
+        "id": "init",
+        "params": {
+          "protocolVersion": "2025-03-26",
+          "clientInfo": {
+            "name": "eg-local-tls-probe",
+            "version": "1"
+          },
+          "capabilities": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "init",
+        "result": {
+          "protocolVersion": "2025-03-26",
+          "capabilities": {
+            "tools": {}
+          },
+          "serverInfo": {
+            "name": "execution-guard-lab",
+            "version": "0.3.0"
+          }
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_discover_and_lifecycle",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "initialize",
+        "id": "init",
+        "params": {
+          "protocolVersion": "2025-06-18",
+          "clientInfo": {
+            "name": "eg-local-tls-probe",
+            "version": "1"
+          },
+          "capabilities": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "init",
+        "result": {
+          "protocolVersion": "2025-06-18",
+          "capabilities": {
+            "tools": {}
+          },
+          "serverInfo": {
+            "name": "execution-guard-lab",
+            "version": "0.3.0"
+          }
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_discover_and_lifecycle",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "initialize",
+        "id": "init",
+        "params": {
+          "protocolVersion": "2025-11-25",
+          "clientInfo": {
+            "name": "eg-local-tls-probe",
+            "version": "1"
+          },
+          "capabilities": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "init",
+        "result": {
+          "protocolVersion": "2025-11-25",
+          "capabilities": {
+            "tools": {}
+          },
+          "serverInfo": {
+            "name": "execution-guard-lab",
+            "version": "0.3.0"
+          }
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_discover_and_lifecycle",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "initialize",
+        "id": "init",
+        "params": {
+          "protocolVersion": "2026-07-28",
+          "clientInfo": {
+            "name": "eg-local-tls-probe",
+            "version": "1"
+          },
+          "capabilities": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "init",
+        "result": {
+          "protocolVersion": "2025-11-25",
+          "capabilities": {
+            "tools": {}
+          },
+          "serverInfo": {
+            "name": "execution-guard-lab",
+            "version": "0.3.0"
+          }
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_discover_and_lifecycle",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized"
+      },
+      "http_status": 202,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_discover_and_lifecycle",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": "p"
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p",
+        "result": {}
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_discover_and_lifecycle",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+          "tools": [
+            {
+              "name": "text_sha256",
+              "description": "Compute SHA-256 of provided UTF-8 text.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "maxLength": 4096
+                  }
+                },
+                "required": [
+                  "text"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "sha256": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+                  }
+                },
+                "required": [
+                  "sha256"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "evidence_bundle_verify",
+              "description": "Compare supplied evidence text against supplied digests; does not establish provenance.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                        },
+                        "text": {
+                          "type": "string",
+                          "maxLength": 4096
+                        },
+                        "sha256": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "text",
+                        "sha256"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 16
+                  }
+                },
+                "required": [
+                  "items"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "all_match": {
+                    "type": "boolean"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "matches": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "matches"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 64
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "all_match",
+                  "items",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "acceptance_evaluate",
+              "description": "Evaluate declared acceptance statuses and evidence digests, not external facts.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "criteria": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "PASS",
+                            "FAIL",
+                            "BLOCKED",
+                            "UNVERIFIED"
+                          ]
+                        },
+                        "evidence_text": {
+                          "type": "string",
+                          "maxLength": 4096
+                        },
+                        "evidence_sha256": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status",
+                        "evidence_text",
+                        "evidence_sha256"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 16
+                  }
+                },
+                "required": [
+                  "criteria"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "criteria": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "digest_matches": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status",
+                        "digest_matches"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 64
+                  },
+                  "declared_pass_with_matching_digest": {
+                    "type": "boolean"
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "criteria",
+                  "declared_pass_with_matching_digest",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "workflow_validate",
+              "description": "Check supplied dependency graph for missing references and cycles; never executes steps.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                        },
+                        "depends_on": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "maxLength": 64,
+                            "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                          },
+                          "maxItems": 32
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "depends_on"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 32
+                  }
+                },
+                "required": [
+                  "steps"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "valid": {
+                    "type": "boolean"
+                  },
+                  "reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "unknown": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 1024
+                  },
+                  "unresolved": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 64
+                  },
+                  "topological_order": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 64
+                  }
+                },
+                "required": [
+                  "valid",
+                  "reason"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "test_results_analyze",
+              "description": "Count supplied test outcomes, without running tests.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "results": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "PASS",
+                            "FAIL",
+                            "SKIP",
+                            "UNVERIFIED",
+                            "BLOCKED"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 64
+                  }
+                },
+                "required": [
+                  "results"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "counts": {
+                    "type": "object",
+                    "properties": {
+                      "PASS": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "FAIL": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "SKIP": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "UNVERIFIED": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "BLOCKED": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "PASS",
+                      "FAIL",
+                      "SKIP",
+                      "UNVERIFIED",
+                      "BLOCKED"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "all_reported_pass": {
+                    "type": "boolean"
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "counts",
+                  "all_reported_pass",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "snapshot_compare",
+              "description": "Compare keys and values of two supplied snapshots without saving either.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "before": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                        },
+                        "value": {
+                          "type": "string",
+                          "maxLength": 512
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 64
+                  },
+                  "after": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                        },
+                        "value": {
+                          "type": "string",
+                          "maxLength": 512
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 64
+                  }
+                },
+                "required": [
+                  "before",
+                  "after"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "added": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 64
+                  },
+                  "removed": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 64
+                  },
+                  "changed": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 64
+                  }
+                },
+                "required": [
+                  "added",
+                  "removed",
+                  "changed"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "blocker_classify",
+              "description": "Classify a supplied error code; policy denials must stop pending official resolution.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "enum": [
+                      "POLICY_DENIED",
+                      "PERMISSION_DENIED",
+                      "UNKNOWN",
+                      "TIMEOUT",
+                      "RATE_LIMIT",
+                      "INVALID_INPUT",
+                      "TEST_FAILURE"
+                    ]
+                  }
+                },
+                "required": [
+                  "code"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string"
+                  },
+                  "recommendation": {
+                    "type": "string"
+                  },
+                  "executes_retry": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "category",
+                  "recommendation",
+                  "executes_retry"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "release_consistency",
+              "description": "Compare supplied CI commit identifiers and reported outcomes, without querying CI.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "expected_sha": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "pattern": "^[0-9a-f]{40}(?![\\s\\S])"
+                  },
+                  "checks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                        },
+                        "sha": {
+                          "type": "string",
+                          "maxLength": 40,
+                          "pattern": "^[0-9a-f]{40}(?![\\s\\S])"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "PASS",
+                            "FAIL",
+                            "PENDING"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "sha",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 64
+                  }
+                },
+                "required": [
+                  "expected_sha",
+                  "checks"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "checks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "matches_sha": {
+                          "type": "boolean"
+                        },
+                        "reported_pass": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "matches_sha",
+                        "reported_pass"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 64
+                  },
+                  "consistent": {
+                    "type": "boolean"
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "checks",
+                  "consistent",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "math_calculate",
+              "description": "Four bounded arithmetic operations; no expressions or code.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "add",
+                      "subtract",
+                      "multiply",
+                      "divide"
+                    ]
+                  },
+                  "a": {
+                    "type": "number",
+                    "minimum": -1000000000000.0,
+                    "maximum": 1000000000000.0
+                  },
+                  "b": {
+                    "type": "number",
+                    "minimum": -1000000000000.0,
+                    "maximum": 1000000000000.0
+                  }
+                },
+                "required": [
+                  "operation",
+                  "a",
+                  "b"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "result"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "statistics_analyze",
+              "description": "Descriptive statistics of supplied finite sample.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "minimum": -1000000000000.0,
+                      "maximum": 1000000000000.0
+                    },
+                    "maxItems": 256,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "values"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "mean": {
+                    "type": "number"
+                  },
+                  "median": {
+                    "type": "number"
+                  },
+                  "population_stddev": {
+                    "type": "number"
+                  },
+                  "min": {
+                    "type": "number"
+                  },
+                  "max": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "count",
+                  "mean",
+                  "median",
+                  "population_stddev",
+                  "min",
+                  "max"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "correlation_analyze",
+              "description": "Pearson correlation; no causal inference.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "minimum": -1000000000000.0,
+                      "maximum": 1000000000000.0
+                    },
+                    "maxItems": 256,
+                    "minItems": 2
+                  },
+                  "y": {
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "minimum": -1000000000000.0,
+                      "maximum": 1000000000000.0
+                    },
+                    "maxItems": 256,
+                    "minItems": 2
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "pearson_r": {
+                    "type": "number"
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "pearson_r",
+                  "count"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "regression_analyze",
+              "description": "Ordinary least squares with intercept; no forecast guarantee.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "minimum": -1000000000000.0,
+                      "maximum": 1000000000000.0
+                    },
+                    "maxItems": 256,
+                    "minItems": 2
+                  },
+                  "y": {
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "minimum": -1000000000000.0,
+                      "maximum": 1000000000000.0
+                    },
+                    "maxItems": 256,
+                    "minItems": 2
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "slope": {
+                    "type": "number"
+                  },
+                  "intercept": {
+                    "type": "number"
+                  },
+                  "r_squared": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "slope",
+                  "intercept",
+                  "r_squared",
+                  "count"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "numerical_compare",
+              "description": "Symmetric absolute/relative tolerance comparison.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "actual": {
+                    "type": "number",
+                    "minimum": -1000000000000.0,
+                    "maximum": 1000000000000.0
+                  },
+                  "expected": {
+                    "type": "number",
+                    "minimum": -1000000000000.0,
+                    "maximum": 1000000000000.0
+                  },
+                  "absolute_tolerance": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000000000000.0
+                  },
+                  "relative_tolerance": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "required": [
+                  "actual",
+                  "expected",
+                  "absolute_tolerance",
+                  "relative_tolerance"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "matches": {
+                    "type": "boolean"
+                  },
+                  "absolute_error": {
+                    "type": "number"
+                  },
+                  "limit": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "matches",
+                  "absolute_error",
+                  "limit"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "time_series_analyze",
+              "description": "Trailing simple moving averages and successive differences, no look-ahead.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "minimum": -1000000000000.0,
+                      "maximum": 1000000000000.0
+                    },
+                    "maxItems": 256,
+                    "minItems": 1
+                  },
+                  "window": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 256
+                  }
+                },
+                "required": [
+                  "values",
+                  "window"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "moving_average": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "maxItems": 256
+                  },
+                  "changes": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "maxItems": 256
+                  },
+                  "window": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "moving_average",
+                  "changes",
+                  "window"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "dataset_validate",
+              "description": "Compare required and observed unique identifiers; no semantic verification.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "expected": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 64,
+                      "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                    },
+                    "maxItems": 256
+                  },
+                  "observed": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 64,
+                      "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                    },
+                    "maxItems": 256
+                  }
+                },
+                "required": [
+                  "expected",
+                  "observed"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "missing": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 256
+                  },
+                  "unexpected": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 256
+                  },
+                  "matched": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 256
+                  },
+                  "complete": {
+                    "type": "boolean"
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "missing",
+                  "unexpected",
+                  "matched",
+                  "complete",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "completion_verify",
+              "description": "Check completeness of required criteria against supplied statuses, not independent proof.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "required": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 64,
+                      "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                    },
+                    "maxItems": 128
+                  },
+                  "observed": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "PASS",
+                            "FAIL",
+                            "BLOCKED",
+                            "UNVERIFIED"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 128
+                  }
+                },
+                "required": [
+                  "required",
+                  "observed"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "missing": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 128
+                  },
+                  "unexpected": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 128
+                  },
+                  "not_passed": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 128
+                  },
+                  "declared_complete": {
+                    "type": "boolean"
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "missing",
+                  "unexpected",
+                  "not_passed",
+                  "declared_complete",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "regression_detect",
+              "description": "Compare supplied baseline and candidate test statuses; missing is not pass.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "before": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "PASS",
+                            "FAIL",
+                            "BLOCKED",
+                            "UNVERIFIED",
+                            "SKIP"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 128
+                  },
+                  "after": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "PASS",
+                            "FAIL",
+                            "BLOCKED",
+                            "UNVERIFIED",
+                            "SKIP"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 128
+                  }
+                },
+                "required": [
+                  "before",
+                  "after"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "regressed": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 128
+                  },
+                  "improved": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 128
+                  },
+                  "missing": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 128
+                  },
+                  "new": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 128
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regressed",
+                  "improved",
+                  "missing",
+                  "new",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "code_structure_analyze",
+              "description": "Static Python syntax, function/branch counts and import roots. Never executes code.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "maxLength": 16000
+                  }
+                },
+                "required": [
+                  "source"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "syntax_valid": {
+                    "type": "boolean"
+                  },
+                  "nodes": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "functions": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "branch_nodes": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "import_roots": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 16000
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "syntax_valid",
+                  "nodes",
+                  "functions",
+                  "branch_nodes",
+                  "import_roots",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "artifact_checksum",
+              "description": "Compute and compare SHA-256 of provided base64 bytes, no filesystem access.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "data_base64": {
+                    "type": "string",
+                    "maxLength": 64000
+                  },
+                  "expected_sha256": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+                  }
+                },
+                "required": [
+                  "data_base64",
+                  "expected_sha256"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "bytes": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+                  },
+                  "matches": {
+                    "type": "boolean"
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "bytes",
+                  "sha256",
+                  "matches",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "archive_validate",
+              "description": "Inspect bounded ZIP bytes in memory, reject unsafe paths and expansion, no extraction.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "data_base64": {
+                    "type": "string",
+                    "maxLength": 64000
+                  }
+                },
+                "required": [
+                  "data_base64"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "valid": {
+                    "type": "boolean"
+                  },
+                  "entries": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "expanded_bytes": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "issues": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 64
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "valid",
+                  "entries",
+                  "expanded_bytes",
+                  "issues",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "equity_drawdown_analyze",
+              "description": "Peak-to-trough relative drawdown of positive supplied equity curve.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "equity": {
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1000000000000.0
+                    },
+                    "maxItems": 256,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "equity"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "max_drawdown_fraction": {
+                    "type": "number"
+                  },
+                  "peak_index": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "trough_index": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "max_drawdown_fraction",
+                  "peak_index",
+                  "trough_index",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "exam_results_compare",
+              "description": "Exact label scoring against supplied reference answers, no claim of holdout independence.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "reference": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 128
+                    },
+                    "maxItems": 256,
+                    "minItems": 1
+                  },
+                  "predicted": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 128
+                    },
+                    "maxItems": 256,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "reference",
+                  "predicted"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "correct": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "total": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "accuracy": {
+                    "type": "number"
+                  },
+                  "mismatch_indices": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "maxItems": 256
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "correct",
+                  "total",
+                  "accuracy",
+                  "mismatch_indices",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "workflow_readiness",
+              "description": "Compute pending ready steps and detect inconsistent dependency states. Does not execute.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                        },
+                        "depends_on": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "maxLength": 64,
+                            "pattern": "^[a-zA-Z0-9_.-]{1,64}(?![\\s\\S])"
+                          },
+                          "maxItems": 32
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "PASS",
+                            "FAIL",
+                            "BLOCKED",
+                            "PENDING",
+                            "RUNNING"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "depends_on",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 32
+                  }
+                },
+                "required": [
+                  "steps"
+                ],
+                "additionalProperties": false
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+              },
+              "outputSchema": {
+                "type": "object",
+                "properties": {
+                  "graph_valid": {
+                    "type": "boolean"
+                  },
+                  "ready": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 64
+                  },
+                  "inconsistent": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 64
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "graph_valid",
+                  "ready",
+                  "inconsistent",
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              "securitySchemes": [
+                {
+                  "type": "oauth2",
+                  "scopes": [
+                    "lab:read"
+                  ]
+                }
+              ],
+              "_meta": {
+                "securitySchemes": [
+                  {
+                    "type": "oauth2",
+                    "scopes": [
+                      "lab:read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[missing-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": false
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[fake-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[expired-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[wrong_issuer-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[wrong_audience-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[wrong_owner-403]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 403,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[wrong_client-403]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 403,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[wrong_scope-403]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 403,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[wrong_key-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[wrong_kid-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[wrong_type-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[future_iat-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[long_ttl-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[missing_exp-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[nbf-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[array_aud-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[bad_claim_type-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_auth_negatives[jku-401]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_protocol_negatives[{-400--32700]",
+      "request": {
+        "bytes": 1,
+        "sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96"
+      },
+      "http_status": 400,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": null,
+        "error": {
+          "code": -32700,
+          "message": "invalid_json"
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_protocol_negatives[{\"a\":1,\"a\":2}-400--32700]",
+      "request": {
+        "bytes": 13,
+        "sha256": "1c53ee0df7b12fd4d65b976120c7fa6b847dc41dffd7f0331c3237a1ceab1756"
+      },
+      "http_status": 400,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": null,
+        "error": {
+          "code": -32700,
+          "message": "invalid_json"
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_protocol_negatives[{\"a\":NaN}-400--32700]",
+      "request": {
+        "bytes": 9,
+        "sha256": "0ce896293703c00486a61416514acc94d2919f4bd42141dedcca7ddfb97ec422"
+      },
+      "http_status": 400,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": null,
+        "error": {
+          "code": -32700,
+          "message": "invalid_json"
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_protocol_negatives[{\"a\":1e999}-400--32700]",
+      "request": {
+        "bytes": 11,
+        "sha256": "7fc8940a305ac930b84cdf1ab55fe88136c436e8dbe696f535e4b578d4dc3cb1"
+      },
+      "http_status": 400,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": null,
+        "error": {
+          "code": -32700,
+          "message": "invalid_json"
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_protocol_negatives[{\"a\":\"\\ud800\"}-400--32700]",
+      "request": {
+        "bytes": 14,
+        "sha256": "89f8ca88ea20e6cd48ed0ab6b731b66377cab0c8fb9a7187ea96ac6813ed24e4"
+      },
+      "http_status": 400,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": null,
+        "error": {
+          "code": -32700,
+          "message": "invalid_json"
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_protocol_negatives[\\xff-400--32700]",
+      "request": {
+        "bytes": 1,
+        "sha256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89"
+      },
+      "http_status": 400,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": null,
+        "error": {
+          "code": -32700,
+          "message": "invalid_json"
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_protocol_negatives[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]-400--32700]",
+      "request": {
+        "bytes": 45,
+        "sha256": "8ecf4992ceb1453cfd90859882f850391a1271b0f99efe79234b6ba6801a3c06"
+      },
+      "http_status": 400,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": null,
+        "error": {
+          "code": -32700,
+          "message": "invalid_json"
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_protocol_negatives[[]-200--32600]",
+      "request": {
+        "bytes": 2,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": null,
+        "error": {
+          "code": -32600,
+          "message": "invalid_request"
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_protocol_negatives[{\"jsonrpc\":\"2.0\",\"id\":true,\"method\":\"ping\"}-200--32600]",
+      "request": {
+        "bytes": 43,
+        "sha256": "3c1e0ee35c6fc56937c65b8595a691a8b3375f8d4faa7eab8355e05222b2c414"
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": null,
+        "error": {
+          "code": -32600,
+          "message": "invalid_request"
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_protocol_negatives[{\"jsonrpc\":\"2.0\",\"id\":4,\"method\":\"unknown\"}-200--32601]",
+      "request": {
+        "bytes": 43,
+        "sha256": "c8756e1471e447cbaf660420a3c7187035f4485bde66cf3719b697e4acb79491"
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "error": {
+          "code": -32601,
+          "message": "method_not_found"
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_protocol_negatives[{\"jsonrpc\":\"2.0\",\"id\":5,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2025-11-25\"}}-200--32602]",
+      "request": {
+        "bytes": 88,
+        "sha256": "a203fbfafcdcb7c724c8c984eeb1927f7045af02fd27687c55eb1f9ab8f5405e"
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "error": {
+          "code": -32602,
+          "message": "invalid_initialize_parameters"
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_transport_headers[headers0-403]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 403,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_transport_headers[headers1-403]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 403,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_transport_headers[headers2-403]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 403,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_transport_headers[headers3-400]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 400,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_transport_headers[headers4-404]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 404,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_transport_headers[headers5-415]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 415,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_transport_headers[headers6-406]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 406,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_transport_headers[headers7-406]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 406,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_oversize",
+      "request": {
+        "bytes": 131073,
+        "sha256": "0c5c5c759aa8164f9fb53c471ff060903c99edcb520fb7d9cb4bf7a45755f1c2"
+      },
+      "http_status": 413,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_unknown_tool",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": 123,
+        "params": {
+          "name": "__unknown__",
+          "arguments": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 123,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "unknown_tool"
+            }
+          ],
+          "isError": true
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p1",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 1,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p1",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 2}"
+            }
+          ],
+          "structuredContent": {
+            "result": 2
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p0",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 0,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p0",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 0}"
+            }
+          ],
+          "structuredContent": {
+            "result": 0
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p3",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 3,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p3",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 6}"
+            }
+          ],
+          "structuredContent": {
+            "result": 6
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p2",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 2,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p2",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 4}"
+            }
+          ],
+          "structuredContent": {
+            "result": 4
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p7",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 7,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p7",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 14}"
+            }
+          ],
+          "structuredContent": {
+            "result": 14
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p5",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 5,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p5",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 10}"
+            }
+          ],
+          "structuredContent": {
+            "result": 10
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p4",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 4,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p4",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 8}"
+            }
+          ],
+          "structuredContent": {
+            "result": 8
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p6",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 6,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p6",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 12}"
+            }
+          ],
+          "structuredContent": {
+            "result": 12
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p8",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 8,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p8",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 16}"
+            }
+          ],
+          "structuredContent": {
+            "result": 16
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p9",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 9,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p9",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 18}"
+            }
+          ],
+          "structuredContent": {
+            "result": 18
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p10",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 10,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p10",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 20}"
+            }
+          ],
+          "structuredContent": {
+            "result": 20
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p11",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 11,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p11",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 22}"
+            }
+          ],
+          "structuredContent": {
+            "result": 22
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p3",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 3,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p3",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 6}"
+            }
+          ],
+          "structuredContent": {
+            "result": 6
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p0",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 0,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p0",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 0}"
+            }
+          ],
+          "structuredContent": {
+            "result": 0
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p2",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 2,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p2",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 4}"
+            }
+          ],
+          "structuredContent": {
+            "result": 4
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p1",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 1,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p1",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 2}"
+            }
+          ],
+          "structuredContent": {
+            "result": 2
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p7",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 7,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p7",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 14}"
+            }
+          ],
+          "structuredContent": {
+            "result": 14
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p6",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 6,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p6",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 12}"
+            }
+          ],
+          "structuredContent": {
+            "result": 12
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p4",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 4,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p4",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 8}"
+            }
+          ],
+          "structuredContent": {
+            "result": 8
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p5",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 5,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p5",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 10}"
+            }
+          ],
+          "structuredContent": {
+            "result": 10
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p9",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 9,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p9",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 18}"
+            }
+          ],
+          "structuredContent": {
+            "result": 18
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p10",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 10,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p10",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 20}"
+            }
+          ],
+          "structuredContent": {
+            "result": 20
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p8",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 8,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p8",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 16}"
+            }
+          ],
+          "structuredContent": {
+            "result": 16
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "id": "p11",
+        "params": {
+          "name": "math_calculate",
+          "arguments": {
+            "operation": "multiply",
+            "a": 11,
+            "b": 2
+          }
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "p11",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"result\": 22}"
+            }
+          ],
+          "structuredContent": {
+            "result": 22
+          },
+          "isError": false
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_parallel_and_reconnect",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "initialize",
+        "id": "init",
+        "params": {
+          "protocolVersion": "2025-11-25",
+          "clientInfo": {
+            "name": "eg-local-tls-probe",
+            "version": "1"
+          },
+          "capabilities": {}
+        }
+      },
+      "http_status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": "init",
+        "result": {
+          "protocolVersion": "2025-11-25",
+          "capabilities": {
+            "tools": {}
+          },
+          "serverInfo": {
+            "name": "execution-guard-lab",
+            "version": "0.3.0"
+          }
+        }
+      },
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_extra_jwt_negatives[unsigned]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_extra_jwt_negatives[noncanonical]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_extra_jwt_negatives[duplicate_claim]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    },
+    {
+      "test": "test_secure_http.py::test_extra_jwt_negatives[deep_header]",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "ping",
+        "id": 1
+      },
+      "http_status": 401,
+      "response": null,
+      "authenticated_fixture_supplied": true
+    }
+  ]
+}
