@@ -1,0 +1,90 @@
+{
+  "status": "PARTIAL",
+  "criteria": [
+    {
+      "id": "A",
+      "state": "PASS",
+      "evidence": "Checkpoint 43, branch/main/PR verified read-only; baseline ZIP read."
+    },
+    {
+      "id": "B",
+      "state": "PASS",
+      "evidence": "Original 60/60 independently rerun; eight tools retained."
+    },
+    {
+      "id": "C",
+      "state": "PASS",
+      "evidence": "OpenAI Help Center, developer docs and MCP 2025-11-25 specs inspected; no numerical cap established."
+    },
+    {
+      "id": "D",
+      "state": "PASS",
+      "evidence": "Local isolated pure-function architecture inspected and test-checked."
+    },
+    {
+      "id": "E",
+      "state": "PASS",
+      "evidence": "15 new functions, 8 preserved and improved through shared framework."
+    },
+    {
+      "id": "F",
+      "state": "PASS",
+      "evidence": "Final pytest 269/269, JUnit XML."
+    },
+    {
+      "id": "G",
+      "state": "PASS",
+      "evidence": "Negative/schema/boundary/ZIP/transport cases in final suite."
+    },
+    {
+      "id": "H",
+      "state": "UNVERIFIED",
+      "reason": "Local security tests pass; public security, OAuth, dependency audit and independent MCP SDK conformance remain unverified."
+    },
+    {
+      "id": "I",
+      "state": "PASS",
+      "evidence": "Independent local subprocess stdio and HTTP tools/list returned 23; not remote conformance."
+    },
+    {
+      "id": "J",
+      "state": "BLOCKED",
+      "reason": "No registered Lab endpoint or available account-side registration action; no actual platform refusal observed."
+    },
+    {
+      "id": "K",
+      "state": "BLOCKED",
+      "reason": "No ordinary ChatGPT Lab calls: prerequisite J unmet."
+    },
+    {
+      "id": "L",
+      "state": "BLOCKED",
+      "reason": "No repeat ChatGPT session; only repeat local sessions passed."
+    },
+    {
+      "id": "M",
+      "state": "PASS",
+      "evidence": "Limitations and owner steps in CONNECTION.md and REPORT.md."
+    },
+    {
+      "id": "N",
+      "state": "PASS",
+      "evidence": "Code, tests, schemas, registry, reports and actual local evidence stored."
+    },
+    {
+      "id": "O",
+      "state": "PASS",
+      "evidence": "Final ZIP and internal hash manifest verified by independent packaging verification; see external checksum."
+    },
+    {
+      "id": "P",
+      "state": "PASS",
+      "evidence": "No repository or production deployment/config writes; original checkpoint unchanged before Lab checkpoint. Production deployment not separately polled."
+    },
+    {
+      "id": "Q",
+      "state": "PASS",
+      "evidence": "No retry or bypass of prior blocked GitHub operation."
+    }
+  ]
+}
