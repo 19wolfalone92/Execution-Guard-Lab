@@ -24,9 +24,7 @@ The first audit found `pytest==9.0.2` affected by `GHSA-6w46-j5rx-g56g` / `CVE-2
 
 The full suite passed on the updated lock: 364 tests, 0 failures, 0 errors and 0 skipped. The official MCP Python SDK v2.3.0 and `httpx2==2.16.2` were used for a real Streamable HTTP exchange against the local HTTPS fixture. Negotiated protocol: `2025-11-25`. Two independent sessions each discovered 23/23 tools, successfully called all 23, rejected empty-argument negative calls for all 23, passed four parallel calls, and rejected an unknown tool. Total: 96 assertions PASS, 0 FAIL.
 
-GitHub Actions run `45886798460` completed SUCCESS at commit `ca64bc86c339a794e070ee1a28b9ca4363167ef5`. Its lock, audit report, JUnit XML and SDK evidence are preserved in the candidate. The earlier failed run `45886212488` is also retained as evidence of the fail-closed pytest advisory detection and remediation.
-
-A subsequent reproducibility run (`45887406189`) passed dependency resolution, clean hash-locked installation, `git diff` lock verification, audit, all 364 tests and SDK v2 calls, but failed the final static-manifest step because the per-run JUnit and SDK evidence contain timestamps/host/duration fields and are intentionally regenerated. The manifest has been corrected to cover stable source, configuration, lock and documentation files; dynamic evidence snapshots remain in the archive and their exact SHA-256 values are recorded in `CI_RUN_45886798460.md`. A fresh run is required to confirm the corrected manifest policy.
+GitHub Actions run `45887674117` completed SUCCESS at final branch commit `6944fbefd09408d229bfd08fe198304e3469ad04`. It confirmed reproducible lock generation (`git diff --exit-code`), clean hash-locked installation, pip check, production preflight, 0-vulnerability audit, all 364 tests, and the official MCP SDK v2 wire probe. The evidence is preserved in `CI_RUN_45887674117.md`. Earlier runs `45886212488` and `45887406189` are retained as evidence of fail-closed dependency detection and correction of the static-manifest policy.
 
 ## GitHub state
 
@@ -34,7 +32,7 @@ Repository: `19wolfalone92/Execution-Guard-Lab`
 
 Main remains unchanged at `d356c7862d50ee369b126aa897748c3b0f8989e8`.
 
-A separate working branch was created: `qualification/dependency-recovery-20261126`. The verified source and candidate qualification files were restored there in 19 incremental commits. The branch contains the restored source, the candidate 0.4.0 qualification changes, and the pre-existing read-only Cloudflare connection-check workflow, preserved byte-for-byte (Git blob SHA-1 `7f5a4ba4de0eca6b4f16db1aba3e8a9e6ddf2494`). The generated hash lock and qualification evidence are being added to the same branch. No merge was performed.
+A separate working branch was created: `qualification/dependency-recovery-20261126`. The verified source and candidate qualification files were restored there in 19 incremental commits. The branch contains 81 files: restored source, candidate 0.4.0 changes, the pre-existing read-only Cloudflare connection-check workflow (preserved byte-for-byte; Git blob SHA-1 `7f5a4ba4de0eca6b4f16db1aba3e8a9e6ddf2494`), the reproducible `requirements.lock`, audit output, JUnit results, SDK evidence and CI run reports. Final branch HEAD: `6944fbefd09408d229bfd08fe198304e3469ad04`. No merge was performed.
 
 The repository is currently **Public**. The linked GitHub integration reports admin/push permissions. Repository rulesets query returned an empty list; branch-protection inspection returned HTTP 403 from the connector and therefore remains UNVERIFIED. The new qualification workflow has no Cloudflare secrets and uses only `contents: read`; the existing Cloudflare diagnostic workflow remains restricted to `main` and is read-only.
 
@@ -61,7 +59,7 @@ Cloudflare's current Remote MCP guide supports Streamable HTTP Workers and OAuth
 
 ## Artifact integrity policy
 
-`MANIFEST_0.4.0.sha256` covers 77 stable files (source, configuration, lock, documentation and acceptance ledger). Per-run `pip-audit.json`, `pytest-results.xml` and `SDK_EVIDENCE_V2.json` are intentionally excluded from the static manifest because their generated evidence can vary across runs; their hashes are recorded in the CI run report, and all three are included in the final ZIP whose own SHA-256 is verified.
+`MANIFEST_0.4.0.sha256` covers 77 stable files (source, configuration, lock, documentation and acceptance ledger). Per-run `pip-audit.json`, `pytest-results.xml` and `SDK_EVIDENCE_V2.json` are intentionally excluded from the static manifest because generated evidence can vary across runs; their hashes are recorded in `CI_RUN_45887674117.md`, and all three are included in the final ZIP whose own SHA-256 is verified.
 
 ## Isolation guarantees
 
