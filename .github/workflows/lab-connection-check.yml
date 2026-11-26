@@ -87,11 +87,14 @@ jobs:
           probe("ACCOUNT_LIST_READ", "/accounts?per_page=50", check_account_list)
           probe("OPTIONAL_KV_READ", prefix + "/storage/kv/namespaces")
           probe("OPTIONAL_D1_READ", prefix + "/d1/database")
+          print("DIAGNOSTIC_REVISION=restricted_token_recheck_v3")
           probe("OPTIONAL_R2_READ", prefix + "/r2/buckets")
           known_groups = {
-              "WORKERS_WRITE": {"workers scripts write", "workers scripts edit", "workers admin", "workers editor"},
+              "WORKERS_WRITE": {"workers scripts write", "workers scripts edit"},
+              "WORKERS_READ": {"workers scripts read"},
               "WORKERS_TAIL": {"workers tail read"},
               "KV_WRITE": {"workers kv storage write", "workers kv storage edit"},
+              "KV_READ": {"workers kv storage read"},
               "D1_WRITE": {"d1 write", "d1 edit"},
               "R2_WRITE": {"workers r2 storage write", "workers r2 storage edit"},
               "ACCOUNT_READ": {"account settings read"},
@@ -135,7 +138,7 @@ jobs:
               print("TOKEN_IP_FILTER_CONFIGURED=" + str(bool(condition.get("request_ip")) if isinstance(condition, dict) else False).lower())
               print("TOKEN_POLICY_SCOPE_METADATA_PRESENT=true")
               known_names = set().union(*known_groups.values())
-              expected = set().union(*(known_groups[k] for k in ("WORKERS_WRITE", "WORKERS_TAIL", "KV_WRITE", "ACCOUNT_READ")))
+              expected = set().union(*(known_groups[k] for k in ("WORKERS_WRITE", "WORKERS_READ", "WORKERS_TAIL", "KV_WRITE", "KV_READ", "ACCOUNT_READ")))
               granted = {str(g.get("name", "")).lower() for p in allow_policies for g in p.get("permission_groups", []) if isinstance(g, dict)}
               extra = granted - expected
               print("UNEXPECTED_ALLOW_GROUP_COUNT=" + str(len(extra)))
@@ -147,7 +150,9 @@ jobs:
           token_id = identity.get("id")
           if isinstance(token_id, str) and re.fullmatch(r"[a-fA-F0-9]{32}", token_id):
               details_path = (prefix + "/tokens/" if token.startswith("cfat_") else "/user/tokens/") + token_id
-              probe("TOKEN_POLICY_READ", details_path, inspect_policy)
+              policy_read = probe("TOKEN_POLICY_READ", details_path, inspect_policy)
+              if not policy_read:
+                  print("POLICY_MINIMUM_SCOPE_CHECK=UNVERIFIED_POLICY_NOT_READABLE")
           else:
               print("TOKEN_POLICY_READ=UNVERIFIED_NO_TOKEN_ID")
           print("WRITE_PERMISSIONS=UNVERIFIED_READ_ONLY_CHECK")
