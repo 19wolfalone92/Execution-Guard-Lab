@@ -39,6 +39,12 @@ jobs:
                   with opener.open(request, timeout=12) as response:
                       status = response.status
                       body = json.loads(response.read(2_000_001))
+                  if label == "ACCOUNT_LIST_READ" and isinstance(body, dict):
+                      info = body.get("result_info")
+                      total = info.get("total_count") if isinstance(info, dict) else None
+                      pages = info.get("total_pages") if isinstance(info, dict) else None
+                      print("ACCOUNT_LIST_TOTAL_COUNT=" + (str(total) if isinstance(total, int) else "UNVERIFIED"))
+                      print("ACCOUNT_LIST_TOTAL_PAGES=" + (str(pages) if isinstance(pages, int) else "UNVERIFIED"))
                   ok = status == 200 and isinstance(body, dict) and body.get("success") is True and check(body.get("result"))
                   print(f"{label}={'PASS' if ok else 'FAIL'} HTTP={status}")
                   return ok
@@ -87,7 +93,7 @@ jobs:
           probe("ACCOUNT_LIST_READ", "/accounts?per_page=50", check_account_list)
           probe("OPTIONAL_KV_READ", prefix + "/storage/kv/namespaces")
           probe("OPTIONAL_D1_READ", prefix + "/d1/database")
-          print("DIAGNOSTIC_REVISION=restricted_token_recheck_v3")
+          print("DIAGNOSTIC_REVISION=account_bound_token_recheck_v4")
           probe("OPTIONAL_R2_READ", prefix + "/r2/buckets")
           known_groups = {
               "WORKERS_WRITE": {"workers scripts write", "workers scripts edit"},
