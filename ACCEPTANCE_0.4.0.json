@@ -1,0 +1,160 @@
+{
+  "status": "PARTIAL",
+  "criteria": [
+    {
+      "id": "A",
+      "state": "PASS",
+      "evidence": "Execution Guard checkpoints restored and read: 0.2.0 revision 1, 0.3.0 revision 2, connection audit revision 1."
+    },
+    {
+      "id": "B",
+      "state": "PASS",
+      "evidence": "Original ZIP verified: 258563 bytes, SHA-256 2e68e71968a70c32449364604973ffd4d69da31f14c475cf25551a0b766382c5; CRC PASS; 65 entries; 64/64 manifest checks PASS."
+    },
+    {
+      "id": "C",
+      "state": "PASS",
+      "evidence": "All 65 original archive entries restored to a clean working directory; path-safety checks passed."
+    },
+    {
+      "id": "D",
+      "state": "PASS",
+      "evidence": "GitHub repository metadata reports authenticated admin and push permissions; main SHA d356c7862d50ee369b126aa897748c3b0f8989e8."
+    },
+    {
+      "id": "E",
+      "state": "UNVERIFIED",
+      "reason": "Cloudflare token is active and account-matched; Workers/KV/D1 read calls succeeded and write groups are declared, but no write operation was performed."
+    },
+    {
+      "id": "F",
+      "state": "BLOCKED",
+      "reason": "Cloudflare policy contains broad/unspecified and user-scope resource classifications; token expiry and IP restrictions are absent; exclusive account isolation is not established."
+    },
+    {
+      "id": "G",
+      "state": "BLOCKED",
+      "reason": "Clean dependency install failed because PyPI DNS is unavailable. Current local cryptography 46.0.4 and PyJWT 2.13.0 do not meet the fail-closed runtime pins."
+    },
+    {
+      "id": "H",
+      "state": "BLOCKED",
+      "reason": "pip-audit could not be installed/run locally; full resolved dependency graph and vulnerability audit remain pending GitHub Actions."
+    },
+    {
+      "id": "I",
+      "state": "PASS",
+      "evidence": "Existing complete test suite reproduced locally: 364/364 PASS."
+    },
+    {
+      "id": "J",
+      "state": "UNVERIFIED",
+      "reason": "New SDK v2 qualification code and CI tests are prepared but have not run."
+    },
+    {
+      "id": "K",
+      "state": "PASS",
+      "evidence": "Registry contains exactly 23 unique required tool names; local regression suite covers all 23 and existing local HTTPS tests pass."
+    },
+    {
+      "id": "L",
+      "state": "BLOCKED",
+      "reason": "Official MCP SDK v2.3.0 is not installed; SDK import probe returns BLOCKED because the local environment cannot reach PyPI."
+    },
+    {
+      "id": "M",
+      "state": "UNVERIFIED",
+      "reason": "Cloudflare Workers, Python Workers, OAuth Provider and platform limits were researched; no Cloudflare runtime execution or comparative benchmark was possible."
+    },
+    {
+      "id": "N",
+      "state": "BLOCKED",
+      "reason": "Cloudflare write/deploy authority is not safely qualified because token resource isolation is unverified."
+    },
+    {
+      "id": "O",
+      "state": "BLOCKED",
+      "reason": "The current server validates externally issued JWTs only; no real OAuth authorization server, consent, PKCE, refresh or revocation flow exists."
+    },
+    {
+      "id": "P",
+      "state": "UNVERIFIED",
+      "reason": "Existing local HTTPS/JWT/input-limit negative tests pass; production OAuth, cloud isolation and updated dependency security are not qualified."
+    },
+    {
+      "id": "Q",
+      "state": "BLOCKED",
+      "reason": "Production preflight correctly refuses the installed dependency versions: cryptography 46.0.4 != 50.0.2 and PyJWT 2.13.0 != 2.15.1."
+    },
+    {
+      "id": "R",
+      "state": "BLOCKED",
+      "reason": "No Cloudflare Worker was created or deployed."
+    },
+    {
+      "id": "S",
+      "state": "BLOCKED",
+      "reason": "No permanent HTTPS MCP URL exists."
+    },
+    {
+      "id": "T",
+      "state": "BLOCKED",
+      "reason": "No remote MCP endpoint is available to test."
+    },
+    {
+      "id": "U",
+      "state": "BLOCKED",
+      "reason": "Remote MCP discovery has not been performed; 0/23 remotely discovered."
+    },
+    {
+      "id": "V",
+      "state": "BLOCKED",
+      "reason": "Remote MCP tool calls have not been performed; 0/23 remotely called."
+    },
+    {
+      "id": "W",
+      "state": "BLOCKED",
+      "reason": "No remote results exist to compare with local reference outputs."
+    },
+    {
+      "id": "X",
+      "state": "BLOCKED",
+      "reason": "The Lab has not been registered in ChatGPT."
+    },
+    {
+      "id": "Y",
+      "state": "BLOCKED",
+      "reason": "ChatGPT has not discovered any Lab tools."
+    },
+    {
+      "id": "Z",
+      "state": "BLOCKED",
+      "reason": "No tool call from ordinary ChatGPT has been observed."
+    },
+    {
+      "id": "AA",
+      "state": "BLOCKED",
+      "reason": "No registered endpoint exists; cross-session stability cannot be tested."
+    },
+    {
+      "id": "AB",
+      "state": "PASS",
+      "evidence": "Main Execution Guard Pro repository, PR #5, checkpoint 43 and support case #21118282 were not modified."
+    },
+    {
+      "id": "AC",
+      "state": "PASS",
+      "evidence": "The previously blocked operation was not repeated, retried through another route, or bypassed; no Cloudflare mutations were attempted."
+    },
+    {
+      "id": "AD",
+      "state": "PASS",
+      "evidence": "Source archive identity, test results, dependency findings, Cloudflare read-only diagnostics and gate ledger are recorded in the 0.4.0 candidate artifacts and Execution Guard checkpoint."
+    },
+    {
+      "id": "AE",
+      "state": "PASS",
+      "evidence": "Original ZIP, extraction safety and manifest hashes were independently verified; the 0.4.0 candidate archive is verified separately in this run."
+    }
+  ]
+}

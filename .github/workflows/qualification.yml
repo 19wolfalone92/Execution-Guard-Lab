@@ -1,0 +1,82 @@
+name: Execution Guard Lab qualification
+
+on:
+  push:
+    branches:
+      - 'qualification/**'
+    paths:
+      - '**'
+      - '.github/workflows/qualification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lab-qualification-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  qualify:
+    if: github.repository == '19wolfalone92/Execution-Guard-Lab'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install pinned qualification tooling
+        run: |
+          python -m pip install --disable-pip-version-check 'pip-tools==7.7.0' 'pip-audit==2.10.1'
+
+      - name: Resolve full dependency graph with hashes
+        run: |
+          pip-compile --resolver=backtracking --generate-hashes --output-file requirements.lock requirements-lock-v2.in
+          test -s requirements.lock
+
+      - name: Install the locked graph in a clean virtual environment
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --disable-pip-version-check --require-hashes -r requirements.lock
+          .venv/bin/python -m pip check
+          .venv/bin/python production_preflight.py
+          .venv/bin/python sdk_probe_v2.py --check-install
+
+      - name: Audit the complete locked graph
+        run: |
+          pip-audit --strict --desc --format json --output pip-audit.json -r requirements.lock
+
+      - name: Reproduce the 364-test suite
+        run: |
+          .venv/bin/python -m pytest -q --junitxml=pytest-results.xml
+
+      - name: Qualify all 23 tools through the official MCP SDK v2 over loopback TLS
+        run: |
+          .venv/bin/python sdk_probe_v2.py --local-fixture --output SDK_EVIDENCE_V2.json
+
+      - name: Validate the existing acceptance ledger
+        run: |
+          .venv/bin/python scripts/verify.py ACCEPTANCE.json
+          .venv/bin/python scripts/verify.py ACCEPTANCE_0.4.0.json
+          .venv/bin/python scripts/verify_manifest.py MANIFEST.sha256
+          .venv/bin/python scripts/verify_manifest.py MANIFEST_0.4.0.sha256
+
+      - name: Upload qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: execution-guard-lab-qualification-${{ github.sha }}
+          if-no-files-found: warn
+          path: |
+            requirements.lock
+            pip-audit.json
+            pytest-results.xml
+            SDK_EVIDENCE_V2.json
+            ACCEPTANCE_0.4.0.json
+            MANIFEST_0.4.0.sha256
