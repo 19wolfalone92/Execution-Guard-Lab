@@ -34,12 +34,12 @@
     {
       "id": "G",
       "state": "BLOCKED",
-      "reason": "Clean dependency install failed because PyPI DNS is unavailable. Current local cryptography 46.0.4 and PyJWT 2.13.0 do not meet the fail-closed runtime pins."
+      "reason": "GitHub Actions resolved and installed the full pinned graph; pip check, exact runtime preflight and MCP SDK import passed. The first audit found pytest 9.0.2 vulnerable; candidate raised to 9.2.0 and requires a clean rerun."
     },
     {
       "id": "H",
       "state": "BLOCKED",
-      "reason": "pip-audit could not be installed/run locally; full resolved dependency graph and vulnerability audit remain pending GitHub Actions."
+      "reason": "First pip-audit found GHSA-6w46-j5rx-g56g / CVE-2025-71176 in pytest 9.0.2. Candidate now pins pytest 9.2.0; a second audit is pending."
     },
     {
       "id": "I",
@@ -59,7 +59,7 @@
     {
       "id": "L",
       "state": "BLOCKED",
-      "reason": "Official MCP SDK v2.3.0 is not installed; SDK import probe returns BLOCKED because the local environment cannot reach PyPI."
+      "reason": "Official MCP SDK 2.3.0 and httpx2 2.16.2 installed and imported successfully in GitHub Actions, but initialize/tools/list/tools/call have not yet been executed."
     },
     {
       "id": "M",
@@ -84,7 +84,7 @@
     {
       "id": "Q",
       "state": "BLOCKED",
-      "reason": "Production preflight correctly refuses the installed dependency versions: cryptography 46.0.4 != 50.0.2 and PyJWT 2.13.0 != 2.15.1."
+      "reason": "Exact runtime preflight passed in GitHub Actions, but the complete dependency graph did not pass pip-audit because pytest 9.0.2 was vulnerable; rerun with pytest 9.2.0 is pending."
     },
     {
       "id": "R",
