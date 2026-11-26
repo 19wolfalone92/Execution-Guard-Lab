@@ -1,0 +1,24 @@
+﻿tool,L0,L1,L2,L3-local,L4,L5,L6,evidence
+text_sha256,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+evidence_bundle_verify,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+acceptance_evaluate,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+workflow_validate,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+test_results_analyze,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+snapshot_compare,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+blocker_classify,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+release_consistency,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+math_calculate,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+statistics_analyze,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+correlation_analyze,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+regression_analyze,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+numerical_compare,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+time_series_analyze,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+dataset_validate,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+completion_verify,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+regression_detect,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+code_structure_analyze,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+artifact_checksum,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+archive_validate,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+equity_drawdown_analyze,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+exam_results_compare,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport
+workflow_readiness,PASS,PASS,PASS,PASS,UNVERIFIED,UNVERIFIED,UNVERIFIED,pytest; MCP_EVIDENCE.json: two positive and two negative calls in each transport

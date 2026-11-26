@@ -1,0 +1,24 @@
+﻿tool,data_scope,external_access,state_changes,local_auth,remote_auth
+text_sha256,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+evidence_bundle_verify,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+acceptance_evaluate,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+workflow_validate,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+test_results_analyze,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+snapshot_compare,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+blocker_classify,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+release_consistency,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+math_calculate,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+statistics_analyze,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+correlation_analyze,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+regression_analyze,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+numerical_compare,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+time_series_analyze,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+dataset_validate,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+completion_verify,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+regression_detect,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+code_structure_analyze,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+artifact_checksum,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+archive_validate,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+equity_drawdown_analyze,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+exam_results_compare,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
+workflow_readiness,caller_supplied_only,none,none,trusted local caller,not qualified; account permission needed for registration
