@@ -1,0 +1,20 @@
+{
+  "compose_yaml_parse": "PASS",
+  "loopback_publish": "PASS",
+  "readonly_configuration": "PASS",
+  "runtime_caps_configuration": "PASS",
+  "container_build": "NOT_RUN",
+  "remote_publish": "NOT_RUN",
+  "actual_tls_request_records": 121,
+  "http_status_counts": {
+    "200": 82,
+    "202": 1,
+    "401": 19,
+    "403": 6,
+    "400": 8,
+    "404": 1,
+    "415": 1,
+    "406": 2,
+    "413": 1
+  }
+}
