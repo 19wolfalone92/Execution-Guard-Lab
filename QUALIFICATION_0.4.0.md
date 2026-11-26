@@ -24,7 +24,7 @@ The first audit found `pytest==9.0.2` affected by `GHSA-6w46-j5rx-g56g` / `CVE-2
 
 The full suite passed on the updated lock: 364 tests, 0 failures, 0 errors and 0 skipped. The official MCP Python SDK v2.3.0 and `httpx2==2.16.2` were used for a real Streamable HTTP exchange against the local HTTPS fixture. Negotiated protocol: `2025-11-25`. Two independent sessions each discovered 23/23 tools, successfully called all 23, rejected empty-argument negative calls for all 23, passed four parallel calls, and rejected an unknown tool. Total: 96 assertions PASS, 0 FAIL.
 
-GitHub Actions run `45887674117` completed SUCCESS at final branch commit `6944fbefd09408d229bfd08fe198304e3469ad04`. It confirmed reproducible lock generation (`git diff --exit-code`), clean hash-locked installation, pip check, production preflight, 0-vulnerability audit, all 364 tests, and the official MCP SDK v2 wire probe. The evidence is preserved in `CI_RUN_45887674117.md`. Earlier runs `45886212488` and `45887406189` are retained as evidence of fail-closed dependency detection and correction of the static-manifest policy.
+GitHub Actions run `45888707091` completed SUCCESS at branch commit `13729fedad0ae9b9012da038d9059929a8cec00d`. It confirmed reproducible lock generation (`git diff --exit-code`), clean hash-locked installation, pip check, production preflight, 0-vulnerability audit, all 364 tests, the official MCP SDK v2 wire probe, acceptance-ledger validation and both manifests. Earlier successful runs `45886798460`, `45887674117` and `45888013597` independently confirmed the same dependency/test/SDK gates. Runs `45886212488`, `45887406189` and `45888345588` are retained as evidence of fail-closed vulnerability detection and subsequent manifest/report-integrity corrections.
 
 ## GitHub state
 
@@ -32,7 +32,7 @@ Repository: `19wolfalone92/Execution-Guard-Lab`
 
 Main remains unchanged at `d356c7862d50ee369b126aa897748c3b0f8989e8`.
 
-A separate working branch was created: `qualification/dependency-recovery-20261126`. The verified source and candidate qualification files were restored there in 19 incremental commits. The branch contains 81 files: restored source, candidate 0.4.0 changes, the pre-existing read-only Cloudflare connection-check workflow (preserved byte-for-byte; Git blob SHA-1 `7f5a4ba4de0eca6b4f16db1aba3e8a9e6ddf2494`), the reproducible `requirements.lock`, audit output, JUnit results, SDK evidence and CI run reports. Final branch HEAD: `6944fbefd09408d229bfd08fe198304e3469ad04`. No merge was performed.
+A separate working branch was created: `qualification/dependency-recovery-20261126`. The verified source and candidate qualification files were restored there in 19 incremental commits. The branch contains 82 files and is 27 commits ahead of main: restored source, candidate 0.4.0 changes, the pre-existing read-only Cloudflare connection-check workflow (preserved byte-for-byte; Git blob SHA-1 `7f5a4ba4de0eca6b4f16db1aba3e8a9e6ddf2494`), the reproducible `requirements.lock`, audit output, JUnit results, SDK evidence and CI run reports. Latest verified branch HEAD: `13729fedad0ae9b9012da038d9059929a8cec00d`. No merge was performed.
 
 The repository is currently **Public**. The linked GitHub integration reports admin/push permissions. Repository rulesets query returned an empty list; branch-protection inspection returned HTTP 403 from the connector and therefore remains UNVERIFIED. The new qualification workflow has no Cloudflare secrets and uses only `contents: read`; the existing Cloudflare diagnostic workflow remains restricted to `main` and is read-only.
 
@@ -59,11 +59,11 @@ Cloudflare's current Remote MCP guide supports Streamable HTTP Workers and OAuth
 
 ## Execution Guard checkpoint
 
-Checkpoint `execution-guard-lab-0-4-0` revision 1 was saved and independently reread. It records the current branch, successful CI evidence, 23-tool SDK qualification, remaining Cloudflare/OAuth blockers, and the unchanged main Execution Guard Pro state. The checkpoint is refreshed after the final acceptance-ledger update.
+Checkpoint `execution-guard-lab-0-4-0` revision 1 was saved and independently reread. It records the branch, successful CI evidence, 23-tool SDK qualification, remaining Cloudflare/OAuth blockers, and unchanged main Execution Guard Pro state. A final checkpoint revision is saved after the last branch/archive update.
 
 ## Artifact integrity policy
 
-`MANIFEST_0.4.0.sha256` covers 77 stable files (source, configuration, lock, documentation and acceptance ledger). Per-run `pip-audit.json`, `pytest-results.xml` and `SDK_EVIDENCE_V2.json` are intentionally excluded from the static manifest because generated evidence can vary across runs; their hashes are recorded in `CI_RUN_45887674117.md`, and all three are included in the final ZIP whose own SHA-256 is verified.
+`MANIFEST_0.4.0.sha256` covers 78 stable files (source, configuration, lock, documentation and acceptance ledger). Per-run `pip-audit.json`, `pytest-results.xml` and `SDK_EVIDENCE_V2.json` are intentionally excluded from the static manifest because generated evidence can vary across runs; their hashes are recorded in `CI_RUN_45887674117.md`, and all three are included in the final ZIP whose own SHA-256 is verified.
 
 ## Isolation guarantees
 
