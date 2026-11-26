@@ -1,0 +1,24 @@
+﻿tool,L2,L3-local TLS,L3-remote,L4,L5,L6,basis
+text_sha256,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+evidence_bundle_verify,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+acceptance_evaluate,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+workflow_validate,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+test_results_analyze,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+snapshot_compare,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+blocker_classify,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+release_consistency,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+math_calculate,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+statistics_analyze,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+correlation_analyze,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+regression_analyze,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+numerical_compare,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+time_series_analyze,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+dataset_validate,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+completion_verify,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+regression_detect,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+code_structure_analyze,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+artifact_checksum,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+archive_validate,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+equity_drawdown_analyze,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+exam_results_compare,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run
+workflow_readiness,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,actual local TLS discovery/call and full baseline equality; official SDK not run

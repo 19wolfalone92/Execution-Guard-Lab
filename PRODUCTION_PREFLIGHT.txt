@@ -1,0 +1,4 @@
+PRODUCTION START BLOCKED: unqualified dependency versions
+cryptography: required=50.0.2; actual=46.0.4
+pyjwt: required=2.15.1; actual=2.13.0
+exit=1

@@ -1,0 +1,24 @@
+﻿tool,scope,owner check,external access,side effects,notes
+text_sha256,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+evidence_bundle_verify,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+acceptance_evaluate,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+workflow_validate,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+test_results_analyze,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+snapshot_compare,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+blocker_classify,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+release_consistency,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+math_calculate,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+statistics_analyze,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+correlation_analyze,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+regression_analyze,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+numerical_compare,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+time_series_analyze,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+dataset_validate,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+completion_verify,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+regression_detect,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+code_structure_analyze,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+artifact_checksum,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+archive_validate,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+equity_drawdown_analyze,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+exam_results_compare,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
+workflow_readiness,lab:read,exact subject/client/issuer/audience + pinned RS256,none,none,synthetic auth verified; real issuer not configured
