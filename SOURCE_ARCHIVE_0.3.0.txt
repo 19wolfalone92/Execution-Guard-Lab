@@ -1,0 +1,10 @@
+Original verified source archive
+Filename: Execution-Guard-Lab-0.3.0.zip
+Size: 258563 bytes
+SHA-256: 2e68e71968a70c32449364604973ffd4d69da31f14c475cf25551a0b766382c5
+ZIP entries: 65
+Manifest entries: 64
+ZIP CRC: PASS
+Manifest SHA-256 checks: 64/64 PASS
+Extraction safety: PASS (no absolute/traversal paths or symlink entries)
+The original archive remains preserved in the user's Library. This file records its identity; it is not a substitute for the archive bytes.
