@@ -1,0 +1,4 @@
+# Test-only dependencies; use the qualified runtime pins for a staging rerun.
+-r requirements-runtime.txt
+pytest==9.0.2
+httpx==0.28.1
