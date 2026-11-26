@@ -1,0 +1,9 @@
+{
+  "name": "eglab-oauth-local-fixture-only",
+  "main": "fixture.mjs",
+  "compatibility_date": "2026-11-26",
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": {"enabled": false},
+  "kv_namespaces": [{"binding":"OAUTH_KV","id":"00000000000000000000000000000001"}]
+}

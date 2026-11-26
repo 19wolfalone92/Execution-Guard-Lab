@@ -1,0 +1,39 @@
+name: Lab local OAuth provider qualification
+on:
+  push:
+    branches: ['qualification/cloud-runtime-oauth-20261127']
+    paths: ['oauth_runtime/**', '.github/workflows/oauth-local-qualification.yml']
+permissions:
+  contents: read
+jobs:
+  local-oauth:
+    if: github.repository == '19wolfalone92/Execution-Guard-Lab' && github.ref == 'refs/heads/qualification/cloud-runtime-oauth-20261127'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CI: 'true'
+      WRANGLER_SEND_METRICS: 'false'
+    defaults:
+      run:
+        working-directory: oauth_runtime
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install official provider and local Workers runtime without secrets
+        run: |
+          node --version
+          npm install --package-lock-only --ignore-scripts
+          npm ci --ignore-scripts
+          npm audit --audit-level=high --json > ../oauth-audit.json
+      - name: Run local OAuth wire flow against workerd
+        run: npm test
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: lab-local-oauth-${{ github.sha }}
+          path: |
+            oauth-local-evidence.json
+            oauth-audit.json
+            oauth_runtime/package-lock.json
+          if-no-files-found: warn
