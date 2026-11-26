@@ -1,0 +1,225 @@
+{
+  "version": "0.5.0 qualification candidate",
+  "status": "PARTIAL",
+  "production_release": "HOLD",
+  "qualified_code_sha": "f914bc6d496e8cb661f9209a4d93d6b26830a434",
+  "main_sha": "94bba84b303d273f418a1ef7c9cda7abca2ac92b",
+  "criteria": [
+    {
+      "id": "A",
+      "state": "PASS",
+      "evidence": "Checkpoint 0.4.0 restored revision 2."
+    },
+    {
+      "id": "B",
+      "state": "PASS",
+      "evidence": "Connection audit checkpoint revision 4 restored."
+    },
+    {
+      "id": "C",
+      "state": "PASS",
+      "evidence": "GitHub main 94bba84b303d273f418a1ef7c9cda7abca2ac92b and tested candidate f914bc6d496e8cb661f9209a4d93d6b26830a434 read back."
+    },
+    {
+      "id": "D",
+      "state": "PASS",
+      "evidence": "Original 0.4.0 manifest 78/78; 16 new files at tested SHA; no baseline source changes. Main diagnostic is preserved on main, main not merged."
+    },
+    {
+      "id": "E",
+      "state": "PASS",
+      "evidence": "Run 45905792987: TOKEN_ACTIVE=PASS HTTP 200; rechecked before isolated write."
+    },
+    {
+      "id": "F",
+      "state": "PARTIAL",
+      "reason": "Owner policy attestation and effective account list exactly one target; exact saved token policy cannot independently be read (403/9109)."
+    },
+    {
+      "id": "G",
+      "state": "PARTIAL",
+      "reason": "Actual isolated Worker uploaded and deployed; settings/version read and subdomain enable HTTP 200. HTTPS denied; update/rollback not tested."
+    },
+    {
+      "id": "H",
+      "state": "PARTIAL",
+      "reason": "Official Python Workers local workerd 69/69; separate TypeScript OAuth runtime 22/22. Integrated private service binding not tested."
+    },
+    {
+      "id": "I",
+      "state": "PARTIAL",
+      "reason": "Process CPU/RSS and wall-time measured in local workerd, not cloud isolate billing. Two stress cases above 10 ms process CPU."
+    },
+    {
+      "id": "J",
+      "state": "UNVERIFIED",
+      "reason": "Actual free-plan isolate CPU, memory, compressed upload and quotas not qualified."
+    },
+    {
+      "id": "K",
+      "state": "PASS",
+      "evidence": "23 tools unchanged; 23 discovered in official SDK; 69/69 runtime vectors."
+    },
+    {
+      "id": "L",
+      "state": "PASS",
+      "evidence": "69/69 full RPC results equal CPython; 230 repeated stress calls correct; local scope only."
+    },
+    {
+      "id": "M",
+      "state": "PASS",
+      "evidence": "Run 45907197010: 366 tests including 364 baseline + 2 new mock tests, no failures/errors/skips."
+    },
+    {
+      "id": "N",
+      "state": "PASS",
+      "evidence": "Run 45907197010: 96/96 SDK v2 assertions, 2 sessions, 23 tools."
+    },
+    {
+      "id": "O",
+      "state": "PARTIAL",
+      "reason": "Local Workers and OAuth tests pass; actual isolated static Worker write passed before HTTPS denied."
+    },
+    {
+      "id": "P",
+      "state": "PASS",
+      "evidence": "Run 45907197010 pip-audit 35 packages 0 known vulnerabilities; 45907197036 6 Pyodide packages 0; 45907196967 npm audit 0. Scope: these resolved graphs, not guarantee of overall production security."
+    },
+    {
+      "id": "Q",
+      "state": "PARTIAL",
+      "reason": "Official OAuth provider adapter exists and local synthetic resource qualified; real upstream GitHub identity not configured; no public authorization server."
+    },
+    {
+      "id": "R",
+      "state": "PARTIAL",
+      "reason": "Local DCR, metadata, S256 PKCE, code replay revocation and wrong audience verified. No actual production authorization flow."
+    },
+    {
+      "id": "S",
+      "state": "PARTIAL",
+      "reason": "Synthetic owner approval/denial/unknown owner, refresh/revocation pass. Real owner consent and cross-session OAuth not qualified."
+    },
+    {
+      "id": "T",
+      "state": "PARTIAL",
+      "reason": "Baseline bounded transport and isolated OAuth tests pass; no integrated production transport/edge security/resource caps qualification."
+    },
+    {
+      "id": "U",
+      "state": "BLOCKED",
+      "reason": "Cloud HTTPS authorization rejected; actual plan, integrated OAuth/MCP, production security and preflight incomplete."
+    },
+    {
+      "id": "V",
+      "state": "BLOCKED",
+      "reason": "Only static test Worker created; production Lab not deployed."
+    },
+    {
+      "id": "W",
+      "state": "BLOCKED",
+      "reason": "No permanent MCP URL."
+    },
+    {
+      "id": "X",
+      "state": "BLOCKED",
+      "reason": "No remote MCP endpoint; no independent remote SDK connection."
+    },
+    {
+      "id": "Y",
+      "state": "BLOCKED",
+      "reason": "0/23 remotely discovered."
+    },
+    {
+      "id": "Z",
+      "state": "BLOCKED",
+      "reason": "0/23 remotely invoked."
+    },
+    {
+      "id": "AA",
+      "state": "BLOCKED",
+      "reason": "No remote results to compare."
+    },
+    {
+      "id": "AB",
+      "state": "BLOCKED",
+      "reason": "No qualified endpoint to register."
+    },
+    {
+      "id": "AC",
+      "state": "BLOCKED",
+      "reason": "0/23 Lab tools visible in ChatGPT."
+    },
+    {
+      "id": "AD",
+      "state": "BLOCKED",
+      "reason": "0/23 Lab tools actually invoked from ChatGPT."
+    },
+    {
+      "id": "AE",
+      "state": "BLOCKED",
+      "reason": "No live ChatGPT sessions with Lab."
+    },
+    {
+      "id": "AF",
+      "state": "PASS",
+      "evidence": "No paid service activated, no tariff/billing changes, no Containers/D1/R2/KV resources created."
+    },
+    {
+      "id": "AG",
+      "state": "PASS",
+      "evidence": "Pro main a61f1061b91dbabce2bb3ccf66ba710589b21808, PR5 open unmerged head 097466cd33842f6dafabc5e3411c84fb6f1e5d52, checkpoint 43 read back; no writes to Pro."
+    },
+    {
+      "id": "AH",
+      "state": "PASS",
+      "evidence": "Separate Lab static test stopped on HTTPS authorization denial. No retry, alternative route or Pro operation attempted."
+    },
+    {
+      "id": "AI",
+      "state": "PASS",
+      "evidence": "Execution Guard Lab checkpoint 0.5.0 rev1 saved/read back; downloaded evidence archived."
+    },
+    {
+      "id": "AJ",
+      "state": "PASS",
+      "evidence": "Candidate ZIP verified by local CRC, full SHA-256 manifest and read-back; scope is candidate archive, not production release."
+    }
+  ],
+  "counts": {
+    "PASS": 15,
+    "PARTIAL": 9,
+    "UNVERIFIED": 1,
+    "BLOCKED": 11
+  },
+  "remote_mcp_url": null,
+  "tools": {
+    "L3-local": 23,
+    "L3-remote": 0,
+    "L4": 0,
+    "L5": 0,
+    "L6": 0
+  },
+  "evidence_artifacts": [
+    {
+      "run": 45906590372,
+      "file": "Lab-write-45906590372.zip",
+      "sha256": "ac33a521bbaf754f666c26d385c933cf82d74db8e278269ba8e817e779da7311"
+    },
+    {
+      "run": 45907197010,
+      "file": "Lab-regression-45907197010.zip",
+      "sha256": "0577186d8da04a35d7b964975450645fcf86e8e222025e830f225d10f4f4e294"
+    },
+    {
+      "run": 45907197036,
+      "file": "Lab-runtime-45907197036.zip",
+      "sha256": "2936cc996e2b0214f282e1bea4f30483a9c30da3f96405727f5b789d3e0701cf"
+    },
+    {
+      "run": 45907196967,
+      "file": "Lab-oauth-45907196967.zip",
+      "sha256": "2d07d9384e0f3ec2396dd644781d16dd16c20b80f3926d6a37d9af9d2f41c067"
+    }
+  ]
+}

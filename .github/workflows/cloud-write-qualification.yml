@@ -1,32 +1,13 @@
-name: Lab isolated static Worker write qualification
+name: Lab isolated static Worker write qualification (HOLD)
 on:
-  push:
-    branches: ['qualification/cloud-runtime-oauth-20261127']
-    paths: ['cloud_runtime/write_probe.py', '.github/workflows/cloud-write-qualification.yml']
-permissions:
-  contents: read
-concurrency:
-  group: lab-isolated-write-probe
-  cancel-in-progress: false
+  workflow_dispatch:
+permissions: {}
 jobs:
-  static-probe:
-    if: github.repository == '19wolfalone92/Execution-Guard-Lab' && github.ref == 'refs/heads/qualification/cloud-runtime-oauth-20261127'
+  release-hold:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          persist-credentials: false
-      - name: Run no-network control-flow tests before exposing credentials
-        run: python3 -m unittest cloud_runtime.test_write_probe
-      - name: Restricted static probe in the laboratory account
-        env:
-          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: python3 cloud_runtime/write_probe.py
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
-        with:
-          name: lab-static-write-${{ github.run_id }}
-          path: cloud-write-evidence.json
-          if-no-files-found: warn
+      - name: Stop pending authorized resolution
+        run: |
+          echo 'HOLD: run 45906590372 stopped after HTTPS authorization rejected.'
+          echo 'No cloud credentials, cloud API calls or external deployment are permitted by this workflow.'
+          exit 1
