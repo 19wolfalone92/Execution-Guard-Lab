@@ -48,7 +48,13 @@ jobs:
                   print(f"{label}=UNVERIFIED TRANSPORT_OR_PARSE_ERROR")
               return False
           token_path = prefix + "/tokens/verify" if token.startswith("cfat_") else "/user/tokens/verify"
-          active = probe("TOKEN_ACTIVE", token_path, lambda x: isinstance(x, dict) and x.get("status") == "active")
+          identity = {}
+          def capture_token(result):
+              if not isinstance(result, dict):
+                  return False
+              identity["id"] = result.get("id")
+              return result.get("status") == "active"
+          active = probe("TOKEN_ACTIVE", token_path, capture_token)
           matched = probe("ACCOUNT_MATCH", prefix, lambda x: isinstance(x, dict) and str(x.get("id", "")).lower() == account.lower())
           if not active or not matched:
               sys.exit(1)
@@ -57,6 +63,31 @@ jobs:
           probe("OPTIONAL_KV_READ", prefix + "/storage/kv/namespaces")
           probe("OPTIONAL_D1_READ", prefix + "/d1/database")
           probe("OPTIONAL_R2_READ", prefix + "/r2/buckets")
+          known_groups = {
+              "WORKERS_WRITE": {"workers scripts write", "workers scripts edit", "workers admin", "workers editor"},
+              "WORKERS_TAIL": {"workers tail read"},
+              "KV_WRITE": {"workers kv storage write", "workers kv storage edit"},
+              "D1_WRITE": {"d1 write", "d1 edit"},
+              "R2_WRITE": {"workers r2 storage write", "workers r2 storage edit"},
+              "ACCOUNT_READ": {"account settings read"},
+              "WORKERS_CI_WRITE": {"workers ci write", "workers ci edit"},
+          }
+          def inspect_policy(result):
+              if not isinstance(result, dict) or not isinstance(result.get("policies"), list):
+                  return False
+              for key, names in known_groups.items():
+                  matching = [p for p in result["policies"] if isinstance(p, dict) and any(isinstance(g, dict) and str(g.get("name", "")).lower() in names for g in p.get("permission_groups", []))]
+                  allow = any(p.get("effect") == "allow" for p in matching)
+                  deny = any(p.get("effect") == "deny" for p in matching)
+                  print(f"DECLARED_{key}={'ALLOW_PRESENT' if allow else 'NOT_FOUND'} DENY_PRESENT={str(deny).lower()}")
+              print("TOKEN_POLICY_SCOPE_METADATA_PRESENT=true")
+              return True
+          token_id = identity.get("id")
+          if isinstance(token_id, str) and re.fullmatch(r"[a-fA-F0-9]{32}", token_id):
+              details_path = (prefix + "/tokens/" if token.startswith("cfat_") else "/user/tokens/") + token_id
+              probe("TOKEN_POLICY_READ", details_path, inspect_policy)
+          else:
+              print("TOKEN_POLICY_READ=UNVERIFIED_NO_TOKEN_ID")
           print("WRITE_PERMISSIONS=UNVERIFIED_READ_ONLY_CHECK")
           sys.exit(0 if workers else 1)
           PY
