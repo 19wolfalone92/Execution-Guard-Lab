@@ -148,8 +148,8 @@
     },
     {
       "id": "AD",
-      "state": "UNVERIFIED",
-      "reason": "Qualification evidence files and CI run artifacts are preserved; the final 0.4.0 Execution Guard checkpoint has not yet been written."
+      "state": "PASS",
+      "evidence": "Execution Guard checkpoint execution-guard-lab-0-4-0 revision 1 was saved and independently reread; source, lock, audit, regression, SDK and CI evidence are committed in the Lab branch."
     },
     {
       "id": "AE",
