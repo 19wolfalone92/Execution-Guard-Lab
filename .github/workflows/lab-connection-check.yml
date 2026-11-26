@@ -43,7 +43,13 @@ jobs:
                   print(f"{label}={'PASS' if ok else 'FAIL'} HTTP={status}")
                   return ok
               except urllib.error.HTTPError as error:
-                  print(f"{label}=FAIL HTTP={error.code}")
+                  codes = []
+                  try:
+                      payload = json.loads(error.read(65536))
+                      codes = [str(x["code"]) for x in payload.get("errors", []) if isinstance(x, dict) and isinstance(x.get("code"), int)][:8]
+                  except Exception:
+                      pass
+                  print(f"{label}=FAIL HTTP={error.code} ERROR_CODES={','.join(codes) or 'none'}")
               except Exception:
                   print(f"{label}=UNVERIFIED TRANSPORT_OR_PARSE_ERROR")
               return False
@@ -80,6 +86,34 @@ jobs:
                   allow = any(p.get("effect") == "allow" for p in matching)
                   deny = any(p.get("effect") == "deny" for p in matching)
                   print(f"DECLARED_{key}={'ALLOW_PRESENT' if allow else 'NOT_FOUND'} DENY_PRESENT={str(deny).lower()}")
+              allow_policies = [p for p in result["policies"] if isinstance(p, dict) and p.get("effect") == "allow"]
+              def classify_resources(policy):
+                  resources = policy.get("resources")
+                  if not isinstance(resources, dict):
+                      return {"unrecognized"}
+                  kinds = set()
+                  for raw in resources:
+                      name = str(raw).lower()
+                      if name == "com.cloudflare.api.account." + account.lower():
+                          kinds.add("target_account")
+                      elif name in {"com.cloudflare.api.account.*", "com.cloudflare.api.account", "*"}:
+                          kinds.add("broad_or_unspecified")
+                      elif re.fullmatch(r"com\.cloudflare\.api\.account\.[a-f0-9]{32}", name):
+                          kinds.add("different_account")
+                      elif name.startswith("com.cloudflare.api.user"):
+                          kinds.add("user_scope")
+                      else:
+                          kinds.add("unrecognized")
+                  return kinds or {"unrecognized"}
+              for key, names in known_groups.items():
+                  matching = [p for p in allow_policies if any(isinstance(g, dict) and str(g.get("name", "")).lower() in names for g in p.get("permission_groups", []))]
+                  kinds = set().union(*(classify_resources(p) for p in matching)) if matching else set()
+                  print(f"SCOPE_{key}={','.join(sorted(kinds)) or 'not_found'}")
+              kinds = set().union(*(classify_resources(p) for p in allow_policies)) if allow_policies else set()
+              print("ALL_ALLOW_RESOURCE_CLASSES=" + (",".join(sorted(kinds)) or "not_found"))
+              print("TOKEN_EXPIRY_CONFIGURED=" + str(bool(result.get("expires_on"))).lower())
+              condition = result.get("condition") or {}
+              print("TOKEN_IP_FILTER_CONFIGURED=" + str(bool(condition.get("request_ip")) if isinstance(condition, dict) else False).lower())
               print("TOKEN_POLICY_SCOPE_METADATA_PRESENT=true")
               return True
           token_id = identity.get("id")
