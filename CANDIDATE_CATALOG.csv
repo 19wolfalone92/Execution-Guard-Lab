@@ -1,0 +1,77 @@
+﻿group,candidate,state,target,level,reason
+Исходные,text_sha256,IMPLEMENTED,text_sha256,L3-local,Compute SHA-256 of provided UTF-8 text.
+Исходные,evidence_bundle_verify,IMPLEMENTED,evidence_bundle_verify,L3-local,Compare supplied evidence text against supplied digests; does not establish provenance.
+Исходные,acceptance_evaluate,IMPLEMENTED,acceptance_evaluate,L3-local,"Evaluate declared acceptance statuses and evidence digests, not external facts."
+Исходные,workflow_validate,IMPLEMENTED,workflow_validate,L3-local,Check supplied dependency graph for missing references and cycles; never executes steps.
+Исходные,test_results_analyze,IMPLEMENTED,test_results_analyze,L3-local,"Count supplied test outcomes, without running tests."
+Исходные,snapshot_compare,IMPLEMENTED,snapshot_compare,L3-local,Compare keys and values of two supplied snapshots without saving either.
+Исходные,blocker_classify,IMPLEMENTED,blocker_classify,L3-local,Classify a supplied error code; policy denials must stop pending official resolution.
+Исходные,release_consistency,IMPLEMENTED,release_consistency,L3-local,"Compare supplied CI commit identifiers and reported outcomes, without querying CI."
+Математика,math_calculate,IMPLEMENTED,math_calculate,L3-local,Four bounded arithmetic operations; no expressions or code.
+Математика,statistics_analyze,IMPLEMENTED,statistics_analyze,L3-local,Descriptive statistics of supplied finite sample.
+Математика,distribution_analyze,DEFERRED,,L0,"Нужно определить интервалы, веса, квантильный метод и эталоны."
+Математика,correlation_analyze,IMPLEMENTED,correlation_analyze,L3-local,Pearson correlation; no causal inference.
+Математика,regression_analyze,IMPLEMENTED,regression_analyze,L3-local,Ordinary least squares with intercept; no forecast guarantee.
+Математика,probability_calculate,DEFERRED,,L0,Нужна явно определенная вероятностная модель; не универсальная оценка шансов.
+Математика,matrix_calculate,DEFERRED,,L0,"Нужны конкретные операции, размеры и численные пределы."
+Математика,time_series_analyze,IMPLEMENTED,time_series_analyze,L3-local,"Trailing simple moving averages and successive differences, no look-ahead."
+Математика,numerical_compare,IMPLEMENTED,numerical_compare,L3-local,Symmetric absolute/relative tolerance comparison.
+Математика,calculation_verify,MERGED_OR_PARTIAL,numerical_compare,L0,Сравнение с отдельно вычисленным эталоном; не новый универсальный вычислитель.
+Верификация,evidence_verify,MERGED_OR_PARTIAL,evidence_bundle_verify,L0,Сверка предоставленных хешей; независимое происхождение требует доверенного источника.
+Верификация,evidence_compare,MERGED_OR_PARTIAL,snapshot_compare,L0,"Сравнение метаданных/хешей, не истинности."
+Верификация,acceptance_validate,MERGED_OR_PARTIAL,acceptance_evaluate + completion_verify,L0,"Декларации, хеши, полнота обязательных ID."
+Верификация,acceptance_matrix,MERGED_OR_PARTIAL,completion_verify + acceptance_evaluate,L0,Отдельный интерфейс не нужен до новых требований.
+Верификация,completion_verify,IMPLEMENTED,completion_verify,L3-local,"Check completeness of required criteria against supplied statuses, not independent proof."
+Верификация,claim_validate,DEFERRED,,L0,Истинность утверждения требует независимого доверенного источника; локальный хеш недостаточен.
+Верификация,regression_detect,IMPLEMENTED,regression_detect,L3-local,Compare supplied baseline and candidate test statuses; missing is not pass.
+Верификация,verification_report,MERGED_OR_PARTIAL,acceptance_evaluate + completion_verify,L0,"Отчет по предоставленным данным, не новые доказательства."
+Код,code_structure_analyze,IMPLEMENTED,code_structure_analyze,L3-local,"Static Python syntax, function/branch counts and import roots. Never executes code."
+Код,code_complexity_analyze,MERGED_OR_PARTIAL,code_structure_analyze,L0,Частично: число ветвлений; не цикломатическая сложность.
+Код,code_duplicates_detect,DEFERRED,,L0,"Нужны правила нормализации, метрика сходства и корпус."
+Код,code_dependencies_analyze,MERGED_OR_PARTIAL,code_structure_analyze,L0,Частично: корни Python imports; не разрешение зависимостей.
+Код,code_diff_analyze,DEFERRED,,L0,"Нужны точные форматы, границы объема и тестовые эталоны."
+Код,patch_validate,DEFERRED,,L0,Нужна базовая версия и проверка применимости без публикации или выполнения.
+Код,configuration_validate,DEFERRED,,L0,Нужна версия конкретной схемы; универсальный валидатор не нужен.
+Код,test_coverage_analyze,DEFERRED,,L0,Нужны coverage-отчеты и соответствующая версия исходников.
+Код,code_regression_detect,MERGED_OR_PARTIAL,regression_detect,L0,"Частично: статусы тестов, не семантический diff."
+Код,architecture_consistency_check,DEFERRED,,L0,Нужны формализованные архитектурные ограничения проекта.
+Диагностика,error_classify,MERGED_OR_PARTIAL,blocker_classify,L0,Классификация заданных кодов; не произвольный текст.
+Диагностика,error_history_analyze,DEFERRED,,L0,Нужны обезличенные записи событий и структура времени.
+Диагностика,error_pattern_detect,DEFERRED,,L0,Нужен репрезентативный набор ошибок и пороги совпадения.
+Диагностика,root_cause_analyze,DEFERRED,,L0,Причина не выводится достоверно из одного сообщения; нужны наблюдения и контрольные тесты.
+Диагностика,dependency_check,MERGED_OR_PARTIAL,workflow_validate,L0,"Частично: явные зависимости, не проверка среды."
+Диагностика,resource_check,DEFERRED,,L0,"Реальные метрики требуют отдельно разрешенного источника, не произвольного доступа к устройству."
+Диагностика,permission_check,DEFERRED,,L0,Проверка прав требует источника с официальной авторизацией; аннотации не доказательство.
+Диагностика,retry_evaluate,MERGED_OR_PARTIAL,blocker_classify,L0,Частично: рекомендация без исполнения; политика всегда stop.
+Диагностика,recovery_plan,DEFERRED,,L0,Контекстная рекомендация без автоматического выполнения; нужна формализованная модель ошибок.
+Диагностика,blocker_report,MERGED_OR_PARTIAL,blocker_classify,L0,Класс и рекомендация; отдельный отчет не нужен.
+Артефакты,artifact_inspect,DEFERRED,,L0,Разные форматы требуют специализированных безопасных анализаторов.
+Артефакты,artifact_checksum,IMPLEMENTED,artifact_checksum,L3-local,"Compute and compare SHA-256 of provided base64 bytes, no filesystem access."
+Артефакты,archive_validate,IMPLEMENTED,archive_validate,L3-local,"Inspect bounded ZIP bytes in memory, reject unsafe paths and expansion, no extraction."
+Артефакты,manifest_validate,DEFERRED,,L0,"Нужно выбрать формат манифеста, обязательные файлы и доверенный эталон."
+Артефакты,file_type_detect,DEFERRED,,L0,Magic bytes не устанавливают безопасность или тип сложного полиглот-файла.
+Артефакты,file_integrity_check,MERGED_OR_PARTIAL,artifact_checksum,L0,Сравнение байтов с ожидаемым SHA-256.
+Артефакты,artifact_compare,MERGED_OR_PARTIAL,artifact_checksum + snapshot_compare,L0,Сравнение идентификаторов и хешей; не бинарный diff.
+Артефакты,document_structure_analyze,DEFERRED,,L0,Нужны отдельные парсеры PDF/DOCX с лимитами и защитой от внедренных инструкций.
+Артефакты,dataset_validate,IMPLEMENTED,dataset_validate,L3-local,Compare required and observed unique identifiers; no semantic verification.
+Артефакты,artifact_provenance_verify,DEFERRED,,L0,Нужны доверенные подписи/attestations и цепочка доверия; хеш недостаточен.
+Проекты,project_snapshot,MERGED_OR_PARTIAL,Pro project_get / checkpoint_get,L0,Уже предусмотрено Pro; не дублировать постоянное хранилище.
+Проекты,project_rules_validate,DEFERRED,,L0,Нужен машинно-проверяемый набор правил; свободный текст не исполняется.
+Проекты,project_conflict_detect,DEFERRED,,L0,Нужны версии и записи активных владельцев; источник должен быть авторизован.
+Проекты,context_reconstruct,MERGED_OR_PARTIAL,Pro project_resume,L0,Требует подтвержденного состояния и сверки; не дублировать Pro.
+Проекты,context_compact,DEFERRED,,L0,Нужны правила сохранения фактов и проверка потерь; текст не должен содержать секреты.
+Проекты,project_progress,MERGED_OR_PARTIAL,Pro project_get + workflow_status,L0,Уже предусмотрено Pro; не читать состояние из лаборатории.
+Проекты,project_dependencies_analyze,MERGED_OR_PARTIAL,workflow_validate,L0,"Частично: явный DAG, не автоматический поиск межпроектных связей."
+Проекты,project_readiness,MERGED_OR_PARTIAL,completion_verify,L0,Частично: предоставленные критерии и статусы.
+Проекты,project_next_action,MERGED_OR_PARTIAL,workflow_readiness + blocker_classify,L0,Частично: кандидаты из переданного DAG; не выполняет действие.
+Workflow,workflow_integrity,MERGED_OR_PARTIAL,workflow_validate / Pro execution_finalize,L0,"Граф локально, durable integrity в Pro."
+Workflow,workflow_bottleneck,DEFERRED,,L0,Нужны временные метрики задач и модель ресурсов.
+Workflow,workflow_readiness,IMPLEMENTED,workflow_readiness,L3-local,Compute pending ready steps and detect inconsistent dependency states. Does not execute.
+Workflow,workflow_stall_detect,DEFERRED,,L0,Нужны проверенные timestamps/leases и пороги; Pro уже хранит состояние.
+Workflow,workflow_next_action,MERGED_OR_PARTIAL,workflow_readiness,L0,"Готовые шаги по входному графу, без запуска."
+Workflow,workflow_result_compare,MERGED_OR_PARTIAL,snapshot_compare + regression_detect,L0,Сравнение переданных записей и результатов.
+Workflow,workflow_dependencies_analyze,MERGED_OR_PARTIAL,workflow_validate / Pro workflow_dependencies_get,L0,Граф проверяется без отдельного инструмента.
+Workflow,task_priority_analyze,DEFERRED,,L0,"Нужны формальные приоритеты, зависимости и критерии; не менять очередь."
+Workflow,task_completion_evaluate,MERGED_OR_PARTIAL,completion_verify,L0,Полнота заявленных критериев.
+Специализация,equity_drawdown_analyze,IMPLEMENTED,equity_drawdown_analyze,L3-local,Peak-to-trough relative drawdown of positive supplied equity curve.
+Специализация,exam_results_compare,IMPLEMENTED,exam_results_compare,L3-local,"Exact label scoring against supplied reference answers, no claim of holdout independence."

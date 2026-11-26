@@ -1,0 +1,11 @@
+--- lab.py-0.2.0
++++ lab.py-0.3.0
+@@ -91,7 +91,7 @@
+  'text_sha256':obj(sha256=string(64,HEX)),
+  'evidence_bundle_verify':obj(all_match=B,items=arr(obj(id=T,matches=B)),scope=T),
+  'acceptance_evaluate':obj(criteria=arr(obj(id=T,status=T,digest_matches=B)),declared_pass_with_matching_digest=B,scope=T),
+- 'workflow_validate':{'type':'object','properties':{'valid':B,'reason':{'type':['string','null']},'unknown':arr(T),'unresolved':arr(T),'topological_order':arr(T)},'required':['valid','reason'],'additionalProperties':False},
++ 'workflow_validate':{'type':'object','properties':{'valid':B,'reason':{'type':['string','null']},'unknown':arr(T,1024),'unresolved':arr(T),'topological_order':arr(T)},'required':['valid','reason'],'additionalProperties':False},
+  'test_results_analyze':obj(counts=obj(**{k:N for k in ('PASS','FAIL','SKIP','UNVERIFIED','BLOCKED')}),all_reported_pass=B,scope=T),
+  'snapshot_compare':obj(added=arr(T),removed=arr(T),changed=arr(T)),
+  'blocker_classify':obj(category=T,recommendation=T,executes_retry=B),
