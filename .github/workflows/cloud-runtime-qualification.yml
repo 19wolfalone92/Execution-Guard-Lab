@@ -24,7 +24,7 @@ jobs:
       - name: Install baseline hashes and qualification CLI
         run: |
           python -m pip install --require-hashes -r requirements.lock
-          python -m pip install 'uv==0.13.4'
+          python -m pip install 'uv==0.13.4' 'pip-audit==2.10.1'
       - name: Native reference and unchanged source verification
         run: |
           python scripts/verify_manifest.py MANIFEST_0.4.0.sha256
@@ -46,6 +46,16 @@ jobs:
           exit 1
       - name: Compare all 69 synthetic vectors plus parallel calls
         run: python cloud_runtime/qualify.py --url http://127.0.0.1:8789 --output cloud-workerd.json
+      - name: Audit the actual Pyodide dependency graph
+        run: |
+          python - <<'PY'
+          import tomllib
+          from pathlib import Path
+          packages=tomllib.loads(Path('cloud_runtime/pylock.toml').read_text())['packages']
+          assert packages and all(p.get('name') and p.get('version') for p in packages)
+          Path('cloud-worker-pins.txt').write_text(''.join(f"{p['name']}=={p['version']}\n" for p in packages))
+          PY
+          pip-audit --strict --no-deps --disable-pip --format json --output cloud-worker-audit.json -r cloud-worker-pins.txt
       - name: Stop probe
         if: always()
         run: |
@@ -60,3 +70,6 @@ jobs:
             cloud-workerd.json
             workerd.log
             cloud_runtime/uv.lock
+            cloud_runtime/pylock.toml
+            cloud-worker-pins.txt
+            cloud-worker-audit.json

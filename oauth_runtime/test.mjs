@@ -38,10 +38,12 @@ async function main(){
  const bad=await exchange(client,b,'wrong-verifier');check('wrong_pkce_rejected',bad.status>=400);
  const good=await browser(client);const wrongAud=await exchange(client,good,good.verifier,'https://other.invalid/mcp');check('wrong_resource_rejected',wrongAud.status>=400);
  const tokenResponse=await exchange(client,good);const tokens=await tokenResponse.json();check('correct_pkce_access_token',tokenResponse.status===200&&typeof tokens.access_token==='string'&&tokens.expires_in<=900&&typeof tokens.refresh_token==='string');
- const replay=await exchange(client,good);check('code_replay_rejected',replay.status>=400);
  const auth={Authorization:'Bearer '+tokens.access_token};const access=await fetch(resource,{headers:auth});check('authorized_fixture_resource',access.status===200&&(await access.json()).qualified===true);
+ const replay=await exchange(client,good);check('code_replay_rejected',replay.status>=400);
+ const replayRevoked=await fetch(resource,{headers:auth});check('code_replay_revokes_original_grant',replayRevoked.status===401);
+ const fresh=await browser(client);const freshResponse=await exchange(client,fresh);const freshTokens=await freshResponse.json();check('new_grant_after_replay',freshResponse.status===200&&typeof freshTokens.refresh_token==='string');
  const forged=await fetch(resource,{headers:{Authorization:'Bearer forged-token'}});check('forged_token_rejected',forged.status===401);
- const refreshed=await post(as.token_endpoint,{grant_type:'refresh_token',client_id:client,refresh_token:tokens.refresh_token,resource});const rotated=await refreshed.json();check('refresh',refreshed.status===200&&typeof rotated.access_token==='string'&&rotated.access_token!==tokens.access_token);
+ const refreshed=await post(as.token_endpoint,{grant_type:'refresh_token',client_id:client,refresh_token:freshTokens.refresh_token,resource});const rotated=await refreshed.json();check('refresh',refreshed.status===200&&typeof rotated.access_token==='string'&&rotated.access_token!==freshTokens.access_token);
  const access2=await fetch(resource,{headers:{Authorization:'Bearer '+rotated.access_token}});check('refreshed_token_access',access2.status===200);
  const revoke=await post(as.revocation_endpoint,{client_id:client,token:rotated.access_token,token_type_hint:'access_token'});check('revocation_request',revoke.status===200);
  const after=await fetch(resource,{headers:{Authorization:'Bearer '+rotated.access_token}});check('revoked_token_rejected',after.status===401);
