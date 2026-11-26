@@ -1,0 +1,2 @@
+BLOCKED: official MCP Python SDK 1.30.0 is not available in this environment (PackageNotFoundError)
+exit=3
