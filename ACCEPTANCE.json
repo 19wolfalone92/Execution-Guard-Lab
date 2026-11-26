@@ -1,0 +1,120 @@
+{
+  "status": "PARTIAL",
+  "criteria": [
+    {
+      "id": "A",
+      "state": "PASS",
+      "evidence": "Восстановлен точный исходный ZIP 0.2.0."
+    },
+    {
+      "id": "B",
+      "state": "PASS",
+      "evidence": "85824 байта, совпадающий SHA-256, CRC, 26 файлов, 25 хешей; оригинал 0.1.0 сохранён."
+    },
+    {
+      "id": "C",
+      "state": "PASS",
+      "evidence": "BASELINE_RERUN.txt: 269 PASS; stdio 96 и HTTP 98 записей."
+    },
+    {
+      "id": "D",
+      "state": "PASS",
+      "evidence": "23/23 инструментов прошли локальный TLS, полные ответы совпали с 0.2.0 на эталонных fixtures; 364 PASS."
+    },
+    {
+      "id": "E",
+      "state": "BLOCKED",
+      "reason": "Официальный MCP SDK 1.30.0 отсутствует; pip/прямая загрузка wheel недоступны, SDK run не выполнен."
+    },
+    {
+      "id": "F",
+      "state": "UNVERIFIED",
+      "reason": "CPython ASGI локально проверен. Docker build, целевые зависимости, Cloudflare/постоянный хост и нагрузка не квалифицированы."
+    },
+    {
+      "id": "G",
+      "state": "PASS",
+      "evidence": "Реальный loopback TLS процесс; HTTPS 121 запрос, строгий HTTP/JSON, ограничения и discovery. Не публичный TLS."
+    },
+    {
+      "id": "H",
+      "state": "UNVERIFIED",
+      "reason": "RS256 resource-server synthetic auth и отказы подтверждены; реальный issuer, PKCE, refresh, callback и согласие не выполнены."
+    },
+    {
+      "id": "I",
+      "state": "UNVERIFIED",
+      "reason": "Локальные негативные тесты PASS; известные advisory старых зависимостей, целевые версии не установлены, полный внешний аудит отсутствует."
+    },
+    {
+      "id": "J",
+      "state": "BLOCKED",
+      "reason": "Нет отдельного авторизованного постоянно работающего хоста, обновлённой среды и OAuth issuer; deploy не выполнен."
+    },
+    {
+      "id": "K",
+      "state": "BLOCKED",
+      "reason": "Постоянный HTTPS URL не получен."
+    },
+    {
+      "id": "L",
+      "state": "BLOCKED",
+      "reason": "Удалённый endpoint отсутствует."
+    },
+    {
+      "id": "M",
+      "state": "BLOCKED",
+      "reason": "Удалённое обнаружение 0/23."
+    },
+    {
+      "id": "N",
+      "state": "BLOCKED",
+      "reason": "Удалённые вызовы 0/23."
+    },
+    {
+      "id": "O",
+      "state": "PASS",
+      "evidence": "23 полных локальных результата TLS совпали с независимо сохранёнными ответами baseline; исходные эталонные поля проверены."
+    },
+    {
+      "id": "P",
+      "state": "BLOCKED",
+      "reason": "Lab не зарегистрирована; доступный интерфейс не заменяет удалённый endpoint."
+    },
+    {
+      "id": "Q",
+      "state": "BLOCKED",
+      "reason": "ChatGPT Lab tools не обнаружены (0)."
+    },
+    {
+      "id": "R",
+      "state": "BLOCKED",
+      "reason": "Реальных вызовов Lab из ChatGPT нет (0)."
+    },
+    {
+      "id": "S",
+      "state": "BLOCKED",
+      "reason": "Нет зарегистрированного Lab; межсессионные испытания невозможны."
+    },
+    {
+      "id": "T",
+      "state": "PASS",
+      "evidence": "Записей в главный репозиторий/Production-конфигурацию не было; readback PR #5 OPEN/DRAFT/не merged, HEAD 097466cd, checkpoint Pro ревизия 43 HOLD. Live Cloudflare deployment отдельно не опрашивался."
+    },
+    {
+      "id": "U",
+      "state": "PASS",
+      "evidence": "Заблокированная ранее GitHub операция не повторялась; никакой её альтернативный путь не использован."
+    },
+    {
+      "id": "V",
+      "state": "PASS",
+      "evidence": "Отдельный checkpoint Lab 0.3.0 revision 1 сохранён и прочитан, совпадение; локальные журналы и исходные ZIP сохранены."
+    },
+    {
+      "id": "W",
+      "state": "PASS",
+      "evidence": "Архив и манифест проверяются внешним повторным распаковыванием/CRC/хешами; результат приёмки действителен только после успешной финальной проверки упаковки."
+    }
+  ]
+}
