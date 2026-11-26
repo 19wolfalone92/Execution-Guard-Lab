@@ -26,6 +26,8 @@ The full suite passed on the updated lock: 364 tests, 0 failures, 0 errors and 0
 
 GitHub Actions run `45886798460` completed SUCCESS at commit `ca64bc86c339a794e070ee1a28b9ca4363167ef5`. Its lock, audit report, JUnit XML and SDK evidence are preserved in the candidate. The earlier failed run `45886212488` is also retained as evidence of the fail-closed pytest advisory detection and remediation.
 
+A subsequent reproducibility run (`45887406189`) passed dependency resolution, clean hash-locked installation, `git diff` lock verification, audit, all 364 tests and SDK v2 calls, but failed the final static-manifest step because the per-run JUnit and SDK evidence contain timestamps/host/duration fields and are intentionally regenerated. The manifest has been corrected to cover stable source, configuration, lock and documentation files; dynamic evidence snapshots remain in the archive and their exact SHA-256 values are recorded in `CI_RUN_45886798460.md`. A fresh run is required to confirm the corrected manifest policy.
+
 ## GitHub state
 
 Repository: `19wolfalone92/Execution-Guard-Lab`
@@ -50,13 +52,16 @@ Cloudflare's current Remote MCP guide supports Streamable HTTP Workers and OAuth
 
 ## Not yet qualified
 
-- Reproducible lock check against the committed lock file on subsequent CI runs.
 - Cloudflare Python/TypeScript architecture execution.
 - Isolated Cloudflare token scope and write/deploy permissions.
 - Real OAuth authorization server, PKCE, consent, refresh and revocation.
 - Production preflight for an isolated Cloudflare deployment.
 - Cloudflare deployment, permanent HTTPS endpoint, remote MCP 23/23.
 - ChatGPT registration, ChatGPT tool calls, and cross-session stability.
+
+## Artifact integrity policy
+
+`MANIFEST_0.4.0.sha256` covers 77 stable files (source, configuration, lock, documentation and acceptance ledger). Per-run `pip-audit.json`, `pytest-results.xml` and `SDK_EVIDENCE_V2.json` are intentionally excluded from the static manifest because their generated evidence can vary across runs; their hashes are recorded in the CI run report, and all three are included in the final ZIP whose own SHA-256 is verified.
 
 ## Isolation guarantees
 
