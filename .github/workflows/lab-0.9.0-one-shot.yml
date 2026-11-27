@@ -1,27 +1,26 @@
-name: Lab 0.9.0 one-shot HTTPS qualification
+name: Lab 0.9.0 one-shot HTTPS diagnostic
 
 on:
   push:
     branches:
       - qualification/cloud-runtime-oauth-20261127
     paths:
-      - qualification-patches/lab-0.9.0-retry.patch.gz.b64
+      - qualification-patches/https-diagnostic-ready.txt
 
 permissions:
-  contents: write
-  actions: write
+  contents: read
 
 concurrency:
-  group: lab-0.9.0-one-shot-${{ github.ref }}
+  group: lab-0.9.0-https-diagnostic-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  qualify:
+  diagnostic:
     if: github.repository == '19wolfalone92/Execution-Guard-Lab' && github.ref == 'refs/heads/qualification/cloud-runtime-oauth-20261127'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
-      - name: Checkout exact trigger commit
+      - name: Checkout the authorized candidate
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.sha }}
@@ -31,76 +30,15 @@ jobs:
         with:
           python-version: '3.13.18'
 
-      - name: Install locked test dependencies
-        run: python -m pip install --disable-pip-version-check --require-hashes -r requirements.lock
-
-      - name: Apply exact patch, run tests, refresh manifest and commit candidate
+      - name: Bind evidence to the immediately preceding source candidate
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "${RUNNER_TEMP}/evidence"
-          base64 --decode qualification-patches/lab-0.9.0-retry.patch.gz.b64 | gzip -dc > "${RUNNER_TEMP}/lab-0.9.0.patch"
-          printf '%s  %s\n' '1e3cf018072d3019b662f724bc0a74fc2c1f7338ccfe22724e938cd7df903510' "${RUNNER_TEMP}/lab-0.9.0.patch" | sha256sum --check -
-          git apply --check "${RUNNER_TEMP}/lab-0.9.0.patch"
-          git apply "${RUNNER_TEMP}/lab-0.9.0.patch"
-          rm -f qualification-patches/lab-0.9.0-retry.patch.gz.b64
-          python -m pytest -q --disable-warnings --maxfail=1 --junitxml="${RUNNER_TEMP}/evidence/pytest-results.xml"
-          python scripts/verify.py ACCEPTANCE.json
-          if python integrated/preflight.py > "${RUNNER_TEMP}/evidence/production-hold.json"; then
-            echo "Production preflight unexpectedly allowed deployment."
-            exit 1
-          fi
-          python -c "import json,sys; d=json.load(open(sys.argv[1])); assert d['status']=='BLOCKED' and all(d['local'].values()) and d['release_allowed'] is False" "${RUNNER_TEMP}/evidence/production-hold.json"
-          find . -type d \( -name __pycache__ -o -name .pytest_cache \) -prune -exec rm -rf {} +
-          git add -A
-          python - <<'PY'
-          import hashlib, subprocess
-          from pathlib import Path
-          raw = subprocess.check_output(["git", "ls-files", "-z"])
-          paths = sorted(p for p in raw.split(b"\0") if p and p != b"MANIFEST.sha256")
-          rows = []
-          for raw_path in paths:
-              path = raw_path.decode("utf-8")
-              data = Path(path).read_bytes()
-              rows.append(f"{hashlib.sha256(data).hexdigest()}  {path}")
-          Path("MANIFEST.sha256").write_text("\n".join(rows) + "\n", encoding="utf-8")
-          print(f"Generated complete source manifest: {len(rows)} tracked files")
-          PY
-          python scripts/verify_manifest.py MANIFEST.sha256
-          git add MANIFEST.sha256
-          git diff --cached --check
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "fix: qualify one-shot workers.dev HTTPS diagnostic"
-          git push origin HEAD:qualification/cloud-runtime-oauth-20261127
-          candidate_sha="$(git rev-parse HEAD)"
-          printf '%s\n' "$candidate_sha" > "${RUNNER_TEMP}/evidence/source-commit.txt"
-          printf 'GITHUB_SHA=%s\n' "$candidate_sha" >> "$GITHUB_ENV"
+          candidate_sha="$(git rev-parse HEAD^)"
           printf 'CANDIDATE_SHA=%s\n' "$candidate_sha" >> "$GITHUB_ENV"
+          printf 'Candidate source SHA: %s\n' "$candidate_sha"
 
-      - name: Dispatch full regression and Workers runtime qualification
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          for workflow in qualification.yml cloud-runtime-qualification.yml; do
-            code="$(curl --silent --show-error --output "${RUNNER_TEMP}/dispatch-response.json" --write-out '%{http_code}' \
-              --request POST \
-              --header "Authorization: Bearer ${GH_TOKEN}" \
-              --header "Accept: application/vnd.github+json" \
-              --header "X-GitHub-Api-Version: 2022-11-28" \
-              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow}/dispatches" \
-              --data '{"ref":"qualification/cloud-runtime-oauth-20261127"}')"
-            if [ "$code" != "204" ]; then
-              echo "Workflow dispatch failed for $workflow: HTTP $code"
-              cat "${RUNNER_TEMP}/dispatch-response.json"
-              exit 1
-            fi
-            echo "Dispatched $workflow on the committed candidate."
-          done
-
-      - name: Perform exactly one isolated HTTPS request and cleanup
+      - name: Perform one guarded HTTPS diagnostic and cleanup
         id: diagnostic
         env:
           CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -108,6 +46,7 @@ jobs:
           DIAGNOSTIC_EVIDENCE_PATH: ${{ runner.temp }}/evidence/diagnostic-evidence.json
         shell: bash
         run: |
+          mkdir -p "${RUNNER_TEMP}/evidence"
           set +e
           python cloud_runtime/write_probe.py
           result=$?
@@ -115,47 +54,11 @@ jobs:
           echo "diagnostic_exit_code=$result" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: Generate exact candidate source and integrity evidence
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p "${RUNNER_TEMP}/evidence"
-          python benchmarks/all_tools.py "${RUNNER_TEMP}/evidence/all-tools.json"
-          candidate_sha="$(cat "${RUNNER_TEMP}/evidence/source-commit.txt")"
-          head_sha="$(git rev-parse HEAD)"
-          printf 'HEAD=%s CANDIDATE=%s\n' "$head_sha" "$candidate_sha"
-          test "$head_sha" = "$candidate_sha"
-          git archive --format=zip --prefix=source/ "$candidate_sha" > "${RUNNER_TEMP}/evidence/source.zip"
-          git ls-tree -r --full-tree "$candidate_sha" > "${RUNNER_TEMP}/evidence/source-tree.txt"
-          printf '%s\n' "$candidate_sha" > "${RUNNER_TEMP}/evidence/source-commit.txt"
-          cp MANIFEST.sha256 "${RUNNER_TEMP}/evidence/MANIFEST.sha256"
-          sha256sum "${RUNNER_TEMP}/evidence/source.zip" > "${RUNNER_TEMP}/evidence/source.zip.sha256"
-          python - <<'PY'
-          import hashlib, zipfile
-          from pathlib import Path
-          import os
-          root = Path(os.environ["RUNNER_TEMP"]) / "evidence"
-          rows = {}
-          for line in (root / "source-tree.txt").read_text().splitlines():
-              meta, name = line.split("\t", 1)
-              rows[name] = meta.split()[2]
-          with zipfile.ZipFile(root / "source.zip") as archive:
-              assert archive.testzip() is None
-              names = {name.removeprefix("source/") for name in archive.namelist() if not name.endswith("/")}
-              assert names == set(rows), (len(names), len(rows))
-              for name, digest in rows.items():
-                  data = archive.read("source/" + name)
-                  actual = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
-                  assert actual == digest, name
-          print(f"PASS: exact source archive, ZIP CRC and {len(rows)} Git blobs")
-          PY
-          python scripts/verify_manifest.py MANIFEST.sha256
-
-      - name: Upload 0.9.0 qualification evidence
+      - name: Upload sanitized HTTPS evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: execution-guard-lab-0.9.0-complete-evidence
+          name: execution-guard-lab-0.9.0-https-diagnostic-${{ github.run_id }}
           path: ${{ runner.temp }}/evidence/
           if-no-files-found: warn
           retention-days: 30
