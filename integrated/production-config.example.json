@@ -1,7 +1,41 @@
 {
   "status": "HOLD_NOT_DEPLOYABLE",
-  "gateway": {"entrypoint":"integrated/gateway/production.mjs","workers_dev":false,"preview_urls":false,"service_binding":"CORE","kv_binding":"OAUTH_KV","runtime_secrets_required":["GITHUB_OAUTH_CLIENT_SECRET","INTERNAL_KEY"],"required_config":["ISSUER","OWNER_ID","GITHUB_OAUTH_CLIENT_ID","RELEASE_APPROVED"]},
-  "core": {"entrypoint":"integrated/core/src/entry.py","workers_dev":false,"preview_urls":false,"routes":[],"runtime_secrets_required":["INTERNAL_KEY"],"required_config":["OWNER_ID"]},
-  "production_preflight": "BLOCKED: root cause and authorized recovery, real identity, cloud isolation and resource limits not qualified",
-  "deployment_credentials_in_runtime":false
+  "gateway": {
+    "entrypoint": "integrated/gateway/production.mjs",
+    "workers_dev": false,
+    "preview_urls": false,
+    "service_binding": "CORE",
+    "kv_binding": "OAUTH_KV",
+    "runtime_secrets_required": [
+      "GITHUB_OAUTH_CLIENT_SECRET",
+      "INTERNAL_KEY"
+    ],
+    "required_config": [
+      "ISSUER",
+      "OWNER_ID",
+      "GITHUB_OAUTH_CLIENT_ID",
+      "RELEASE_APPROVED"
+    ],
+    "admission_binding": {
+      "name": "ADMISSION",
+      "class_name": "Admission",
+      "migration": "new_sqlite_classes",
+      "global_object": "lab-global-v1"
+    }
+  },
+  "core": {
+    "entrypoint": "integrated/core/src/entry.py",
+    "workers_dev": false,
+    "preview_urls": false,
+    "routes": [],
+    "runtime_secrets_required": [
+      "INTERNAL_KEY"
+    ],
+    "required_config": [
+      "OWNER_ID"
+    ],
+    "optional_rotation_secret": "INTERNAL_KEY_PREVIOUS"
+  },
+  "production_preflight": "BLOCKED: root cause and authorized recovery, real identity, distributed OAuth lifecycle, cloud isolation and resource limits not qualified",
+  "deployment_credentials_in_runtime": false
 }

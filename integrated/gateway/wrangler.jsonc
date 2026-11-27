@@ -1,1 +1,42 @@
-{"name":"eglab-integrated-local-gateway","main":"fixture.mjs","compatibility_date":"2026-11-26","workers_dev":false,"preview_urls":false,"observability":{"enabled":false},"vars":{"INTERNAL_KEY":"synthetic-only-not-production-6e9ef377ee01"},"kv_namespaces":[{"binding":"OAUTH_KV","id":"00000000000000000000000000000001"}],"services":[{"binding":"CORE","service":"eglab-integrated-local-core"}]}
+{
+  "name": "eglab-integrated-local-gateway",
+  "main": "fixture.mjs",
+  "compatibility_date": "2026-11-26",
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": {
+    "enabled": false
+  },
+  "vars": {
+    "INTERNAL_KEY": "synthetic-only-not-production-6e9ef377ee01",
+    "OWNER_ID": "fixture-owner"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "OAUTH_KV",
+      "id": "00000000000000000000000000000001"
+    }
+  ],
+  "services": [
+    {
+      "binding": "CORE",
+      "service": "eglab-integrated-local-core"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "ADMISSION",
+        "class_name": "Admission"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "Admission"
+      ]
+    }
+  ]
+}

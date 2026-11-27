@@ -1,4 +1,4 @@
-name: Lab 0.6.0 integrated local MCP qualification
+name: Lab 0.7.0 integrated local MCP qualification
 on:
   push:
     branches: ['qualification/cloud-runtime-oauth-20261127']
@@ -29,9 +29,10 @@ jobs:
           npm audit --audit-level=high --json > ../integrated-npm-audit.json
       - name: Diagnostics offline and prepare unchanged kernel
         run: |
-          python -m pytest -q diagnostics cloud_runtime/test_write_probe.py integrated/tests/test_optimized.py
-          node --test oauth_runtime/identity.test.mjs integrated/gateway/transport.test.mjs
+          python -m pytest -q diagnostics cloud_runtime/test_write_probe.py integrated/tests/test_optimized.py integrated/tests/test_key_rotation.py
+          node --test oauth_runtime/identity.test.mjs integrated/gateway/transport.test.mjs integrated/gateway/admission.test.mjs
           python integrated/tests/benchmark.py native-resource-comparison.json
+          python integrated/tests/profile_ast.py ast-profile.json
           cp lab.py extensions.py integrated/core/src/
           openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj '/CN=127.0.0.1' -addext 'subjectAltName=IP:127.0.0.1' -keyout "$RUNNER_TEMP/lab-key.pem" -out "$RUNNER_TEMP/lab-cert.pem"
       - name: Launch Python core locally (loopback only)
@@ -68,6 +69,7 @@ jobs:
             integrated-evidence.json
             integrated-npm-audit.json
             native-resource-comparison.json
+            ast-profile.json
             integrated/core/uv.lock
             integrated/core/pylock.toml
           if-no-files-found: warn

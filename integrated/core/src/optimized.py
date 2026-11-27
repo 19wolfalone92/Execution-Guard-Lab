@@ -8,14 +8,19 @@ def code(source):
     try: tree=ast.parse(source)
     except (SyntaxError,ValueError,RecursionError):raise ValueError('invalid_python_syntax') from None
     nodes=funcs=branches=0;imports=set()
-    function_types=(ast.FunctionDef,ast.AsyncFunctionDef)
-    branch_types=(ast.If,ast.For,ast.AsyncFor,ast.While,ast.IfExp,ast.ExceptHandler,ast.comprehension,ast.Match)
-    for node in ast.walk(tree):
-        nodes+=1
-        funcs+=isinstance(node,function_types)
-        branches+=isinstance(node,branch_types)
-        if isinstance(node,ast.ImportFrom) and node.module:imports.add(node.module.split('.')[0])
-        elif isinstance(node,ast.Import):imports.update(a.name.split('.')[0] for a in node.names)
+    function_types={ast.FunctionDef,ast.AsyncFunctionDef}
+    branch_types={ast.If,ast.For,ast.AsyncFor,ast.While,ast.IfExp,ast.ExceptHandler,ast.comprehension,ast.Match}
+    # ast.parse constructs concrete stdlib AST types; count exact types.
+    # ast.walk preserves occurrences (including shared operator nodes), as does
+    # the explicit stack. No deduplication by object identity.
+    stack=[tree];pop=stack.pop;extend=stack.extend;children=ast.iter_child_nodes
+    while stack:
+        node=pop();kind=type(node);nodes+=1
+        funcs+=kind in function_types
+        branches+=kind in branch_types
+        if kind is ast.ImportFrom and node.module:imports.add(node.module.split('.')[0])
+        elif kind is ast.Import:imports.update(a.name.split('.')[0] for a in node.names)
+        extend(children(node))
     return {'syntax_valid':True,'nodes':nodes,'functions':funcs,'branch_nodes':branches,'import_roots':sorted(imports),'scope':'python_ast_only_not_execution_or_full_complexity'}
 
 def series(values,window):

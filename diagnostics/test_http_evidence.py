@@ -25,3 +25,19 @@ def test_network(exc,category):
 @pytest.mark.parametrize('body',[b'\xff\xfe',b'x'*(MAX_BODY+10)])
 def test_bad_body(body):
     f=Fake(body=body);r=one_shot(URL,MARK,opener=f);assert r['status']=='FAIL' and r['body_fragment'] is None and f.calls==1
+
+@pytest.mark.parametrize('status,body,headers,indicator',[
+(403,b'<html>Cloudflare Error 1010</html>',{'Server':'cloudflare'},'body_mentions_1010'),
+(403,b'Cloudflare Access',{'Server':'cloudflare'},'body_mentions_access'),
+(403,b'proxy refused',{'Server':'nginx'},None),
+(403,b'worker says no',{},None),
+(403,b'Error 1010 forged by upstream',{},'body_mentions_1010'),
+(429,b'wait',{'Retry-After':'60'},None),
+(403,b'credential-DO-NOT-LOG',{},None)])
+def test_ambiguous_source(status,body,headers,indicator):
+    from diagnostics.http_evidence import inspect_response
+    r=inspect_response(status,headers,body,MARK)
+    assert r.get('indicator')==indicator and r['source_attribution']=='UNVERIFIED'
+    assert r['subsequent_operations']=='STOP_UNLESS_EXPECTED' and not r['retry_permitted']
+    assert 'credential-DO-NOT-LOG' not in json.dumps(r)
+    if status==429:assert r['retry_after_seconds']==60

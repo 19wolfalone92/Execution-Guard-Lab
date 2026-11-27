@@ -1,6 +1,7 @@
+import {acquire} from './admission.mjs';
 const MAX=128*1024,OUT=1024*1024;
 const allowed=new Set(['2025-03-26','2025-06-18','2025-11-25']);
-const fail=(s)=>new Response(null,{status:s,headers:{'Cache-Control':'no-store'}});
+const fail=(s)=>new Response(null,{status:s,headers:{'Cache-Control':'no-store',...(s===429?{'Retry-After':'60'}:{})}});
 class ReadDeadline extends Error {}
 async function bounded(body,max,timeoutMs=5000){
  if(!body)return new Uint8Array();const reader=body.getReader(),chunks=[];let n=0,timer;
@@ -23,7 +24,7 @@ export function guardedOAuth(app){return {async fetch(request,env,ctx){
  }
  return app.fetch(request,env,ctx);
 }};}
-export function resourceHandler(issuer){
+export function resourceHandler(issuer,{distributed=false}={}){
  let active=0,windowStart=0,count=0;
  return async (request,env,ctx)=>{
   const u=new URL(request.url);if(u.pathname!=='/mcp'||u.search)return fail(404);
@@ -37,10 +38,15 @@ export function resourceHandler(issuer){
   const now=Date.now();if(now-windowStart>=60000){windowStart=now;count=0;}if(count>=180||active>=4)return fail(429);count++;active++;
   try{
    const raw=await bounded(request.body,MAX);
+   const slot=distributed?await acquire(env,ctx.auth):null;
+   if(slot&&slot.status!==204)return fail(slot.status);
    // Do not copy client-controlled headers or tokens into the binding request.
    const response=await env.CORE.fetch('https://lab-core.internal/rpc',{method:'POST',headers:{'Content-Type':'application/json','X-Lab-Internal':env.INTERNAL_KEY,'X-Lab-Scope':'lab:read','X-Lab-Subject':ctx.auth.userId},body:raw,redirect:'manual'});
-   if(![200,202,400,413].includes(response.status))return fail(503);
+   // A returned, fully consumed response proves the computation has ended.
+   // On ambiguous transport failure do not release the durable slot.
    const payload=await bounded(response.body,OUT);
+   if(slot&&!await slot.release())return fail(503);
+   if(![200,202,400,413].includes(response.status))return fail(503);
    return new Response(response.status===202?null:payload,{status:response.status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
   }catch(e){return fail(e instanceof RangeError?413:e instanceof ReadDeadline?408:503);}finally{active--;}
  };

@@ -31,7 +31,7 @@ async def main(cert):
             auth={'Authorization':'Bearer '+tokens['access_token']}
             async with httpx2.AsyncClient(verify=tls,trust_env=False,follow_redirects=False,headers=auth,timeout=30) as http:
                 async with Client(transport(RESOURCE,http_client=http)) as client:
-                    assert client.server_info.version=='0.6.0';listed=await client.list_tools();assert {t.name for t in listed.tools}==set(fixtures())
+                    assert client.server_info.version=='0.7.0';listed=await client.list_tools();assert {t.name for t in listed.tools}==set(fixtures())
                     for name,(args,expected) in fixtures().items():
                         t=time.perf_counter();r=await client.call_tool(name,args);assert not r.is_error and r.structured_content==expected,name
                         assert json.loads(r.content[0].text)==expected,name
