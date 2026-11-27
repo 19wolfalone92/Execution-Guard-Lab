@@ -71,17 +71,10 @@ def main():
         vid=str(uuid.UUID(versions[0]['version_id'])); did=str(uuid.UUID(d['id']))
         record('active_version',phase=label,version_id=vid,deployment_id=did); return vid
     def smoke(marker):
-        # GET-only propagation check; never resend a write operation.
-        for _ in range(8):
-            try:
-                with opener.open(urllib.request.Request(url,headers={'Cache-Control':'no-cache'}),timeout=10) as res:
-                    if res.status==200 and res.read(128).decode()==marker:
-                        record('https_'+marker,status='PASS',http=200); return
-            except urllib.error.HTTPError as e:
-                if e.code in (401,403): raise Stop('HTTPS authorization rejected') from None
-            except (OSError,ValueError): pass
-            time.sleep(2)
-        raise Stop('HTTPS verification failed '+marker)
+        from diagnostics.http_evidence import one_shot
+        result=one_shot(url,marker.encode('ascii'),opener=opener)
+        record('https_'+marker,**result)
+        require(result['status']=='PASS','HTTPS authorization rejected' if result['status']=='BLOCKED' else 'HTTPS verification failed')
     first='eglab-static-v1'; second='eglab-static-v2'
     upload(first); report['created']=True
     # Verify settings can be read; do not log arbitrary account metadata.

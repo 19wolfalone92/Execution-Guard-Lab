@@ -7,7 +7,7 @@ from cloud_runtime import write_probe as probe
 ACCOUNT='a'*32
 V1=str(uuid.UUID(int=1)); V2=str(uuid.UUID(int=2)); D1=str(uuid.UUID(int=3)); D2=str(uuid.UUID(int=4))
 class Reply:
-    def __init__(self,body,status=200): self.body=body; self.status=status
+    def __init__(self,body,status=200): self.body=body; self.status=status; self.headers={}
     def __enter__(self): return self
     def __exit__(self,*args): return False
     def read(self,n): return self.body[:n]
