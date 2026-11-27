@@ -51,6 +51,7 @@ jobs:
             exit 1
           fi
           python -c "import json,sys; d=json.load(open(sys.argv[1])); assert d['status']=='BLOCKED' and all(d['local'].values()) and d['release_allowed'] is False" "${RUNNER_TEMP}/evidence/production-hold.json"
+          find . -type d \( -name __pycache__ -o -name .pytest_cache \) -prune -exec rm -rf {} +
           git add -A
           python - <<'PY'
           import hashlib, subprocess
@@ -128,10 +129,11 @@ jobs:
           python - <<'PY'
           import hashlib, zipfile
           from pathlib import Path
-          root = Path("${RUNNER_TEMP}/evidence")
+          import os
+          root = Path(os.environ["RUNNER_TEMP"]) / "evidence"
           rows = {}
           for line in (root / "source-tree.txt").read_text().splitlines():
-              meta, name = line.split("\\t", 1)
+              meta, name = line.split("\t", 1)
               rows[name] = meta.split()[2]
           with zipfile.ZipFile(root / "source.zip") as archive:
               assert archive.testzip() is None
