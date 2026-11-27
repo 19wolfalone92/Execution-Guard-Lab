@@ -37,7 +37,7 @@ The code comparison shows several material differences:
 
 The Pro architecture is a useful reference, but not a drop-in configuration. Resource IDs, OAuth clients, secrets, databases, endpoints and production deployments were not copied.
 
-See PRO_VS_LAB.csv for the complete 34-row matrix.
+See PRO_VS_LAB.csv for the 34-row matrix and PRO_VS_LAB_SOURCE_MAP.md for immutable Pro/Lab source paths and commit references.
 
 ## 3. HTTPS root-cause determination
 

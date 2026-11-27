@@ -4,6 +4,7 @@ Status: PARTIAL / HOLD. This is not a production release.
 
 - Technical report: TECHNICAL_REPORT.md
 - Pro vs Lab 34-dimension matrix: PRO_VS_LAB.csv
+- Exact source paths for all 34 dimensions: PRO_VS_LAB_SOURCE_MAP.md
 - 79-gate acceptance ledger: ACCEPTANCE.json
 - 79-gate CSV: GATE_MATRIX.csv
 - 23-tool qualification matrix: TOOL_MATRIX.csv
