@@ -1,6 +1,6 @@
 // Real workerd multi-Worker test; all hosts and identifiers are synthetic.
 // This does not model Cloudflare edge locations or cross-region KV propagation.
-import {Miniflare} from 'miniflare';
+import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
 import {readFile,mkdtemp,rm,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';import {join} from 'node:path';
 import assert from 'node:assert/strict';
@@ -9,10 +9,10 @@ const dir=await mkdtemp(join(tmpdir(),'eglab-admission-'));
 const admission=await readFile(new URL('../integrated/gateway/admission.mjs',import.meta.url),'utf8');
 const binding={ADMISSION:{className:'Admission',scriptName:'admission-host',useSQLite:true}};
 const client=`export default {async fetch(request,env){const u=new URL(request.url);if(request.method!=='POST'||!['/acquire','/release'].includes(u.pathname))return new Response(null,{status:404});const name=request.headers.get('X-Test-Object');if(!['race','rate'].includes(name))return new Response(null,{status:400});const stub=env.ADMISSION.get(env.ADMISSION.idFromName(name));return stub.fetch('https://admission.internal'+u.pathname,{method:'POST',headers:{'X-Lab-Lease':request.headers.get('X-Lab-Lease'),'X-Lab-Client':request.headers.get('X-Lab-Client')}});}};`;
-const options={host:'127.0.0.1',port:0,cf:false,enableDevRegistry:false,resourcePersistencePath:dir,workers:[
+const options={host:'127.0.0.1',port:0,cf:false,resourcePersistencePath:dir,workers:[
  {name:'admission-host',modules:true,compatibilityDate:'2026-11-26',script:admission+'\nexport default {fetch(){return new Response(null,{status:404});}};',durableObjects:{ADMISSION:{className:'Admission',useSQLite:true}}},
  ...['gateway-a','gateway-b'].map(name=>({name,modules:true,compatibilityDate:'2026-11-26',script:client,durableObjects:binding}))]};
-let mf=new Miniflare(options);const checks=[];const record=(name,value)=>{assert(value,name);checks.push(name);};
+let mf=new Miniflare(convertV4MiniflareOptions(options));const checks=[];const record=(name,value)=>{assert(value,name);checks.push(name);};
 let gateways;
 async function initialize(){await mf.ready;gateways=await Promise.all(['gateway-a','gateway-b'].map(n=>mf.getWorker(n)));}
 const A='a'.repeat(64),B='b'.repeat(64);const lease=(client=A)=>({client,id:randomUUID()});
@@ -26,7 +26,7 @@ try{
  record('cross_worker_release',await req(1-one.g,'release',one.l)===204);record('duplicate_release_rejected',await req(one.g,'release',one.l)===409);
  const newLease=lease();record('capacity_recovered_after_completion',await req(0,'acquire',newLease)===204);
  // Recreate workerd with the same SQLite persistence. No release on unknown completion.
- await mf.dispose();mf=new Miniflare(options);await initialize();
+ await mf.dispose();mf=new Miniflare(convertV4MiniflareOptions(options));await initialize();
  record('persisted_slots_survive_restart',await req(1,'acquire',lease())===429);
  for(const a of [...accepted,{g:0,l:newLease}])assert.equal(await req(1-a.g,'release',a.l),204);
  record('all_slots_released',await req(1,'acquire',lease())===204);

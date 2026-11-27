@@ -7,7 +7,7 @@ After a real HTTPS gateway URL has been qualified, use https://github.com/settin
 - Application name: Execution Guard Lab Identity
 - Homepage URL: the verified gateway HTTPS origin (not available yet).
 - Authorization callback URL: that same origin + `/callback` (not a currently usable URL).
-- Disable device flow; no repository, organization, write or email scopes. This app is solely for identity. Set `GITHUB_OAUTH_CLIENT_ID` in Gateway configuration and `GITHUB_OAUTH_CLIENT_SECRET` in Gateway runtime secrets; never send it in chat or commit it. The adapter verifies the numeric GitHub ID against `OWNER_ID`, requires empty granted scope and never persists the upstream token. Upstream revocation/expiry and real owner sign-in still require testing.
+- Disable device flow; no repository, organization, write or email scopes. This app is solely for identity. Set `GITHUB_OAUTH_CLIENT_ID` in Gateway configuration and `GITHUB_OAUTH_CLIENT_SECRET` in Gateway runtime secrets; never send it in chat or commit it. The adapter verifies the numeric GitHub ID against `OWNER_ID`, requires empty granted scope and never persists the upstream token. The adapter now requires confirmed retirement of the dedicated app token after identity lookup; mock-only tests, upstream live revocation/expiry and real owner sign-in still require qualification.
 - OAuth scope lab:read; access 900 s, refresh 604800 s. The existing provider stores grant state in KV; cross-location replay/revocation is not yet strictly qualified. No assertion of instantaneous global revocation.
 
 ## Private core, admission and rotation
