@@ -12,7 +12,7 @@ class Reply:
     def __exit__(self,*args): return False
     def read(self,n): return self.body[:n]
 class Fake:
-    def __init__(self,extra=False): self.extra=extra; self.writes=[]; self.version=V1; self.enabled=False; self.uploads=0
+    def __init__(self,extra=False): self.extra=extra; self.writes=[]; self.version=V1; self.enabled=False; self.uploads=0; self.deleted=False; self.worker_present=False
     def open(self,req,timeout):
         url=req.full_url; method=req.get_method(); path=url.split('/client/v4')[-1]
         if 'workers.dev/health' in url: return Reply(b'eglab-static-v1' if self.version==V1 else b'eglab-static-v2')
@@ -22,7 +22,8 @@ class Fake:
         elif path=='/accounts/'+ACCOUNT: result={'id':ACCOUNT}
         elif path=='/accounts?per_page=50':
             result=[{'id':ACCOUNT}]+([{'id':'b'*32}] if self.extra else []); info={'total_count':len(result),'total_pages':1}
-        elif path.endswith('/workers/scripts'): result=[]
+        elif path.endswith('/workers/scripts'):
+            result=[{'id':'eglab-probe-123-1'}] if self.worker_present else []
         elif path.endswith('/workers/subdomain'): result={'subdomain':'synthetic-lab'}
         elif path.endswith('/deployments') and method=='GET': result={'deployments':[{'id':D1 if self.version==V1 else D2,'versions':[{'version_id':self.version,'percentage':100}]}]}
         elif path.endswith('/deployments') and method=='POST': self.version=json.loads(req.data)['versions'][0]['version_id']; result={'id':D1}
@@ -31,22 +32,44 @@ class Fake:
             if method=='POST': self.enabled=json.loads(req.data)['enabled']
             result={'enabled':self.enabled}
         elif method=='PUT' and '/workers/scripts/eglab-probe-' in path:
-            self.uploads+=1; self.version=V1 if self.uploads==1 else V2; result={'id':'synthetic'}
+            self.uploads+=1; self.version=V1 if self.uploads==1 else V2; self.worker_present=True; result={'id':'synthetic'}
+        elif method=='DELETE' and '/workers/scripts/eglab-probe-' in path:
+            self.deleted=True; self.worker_present=False; result={'id':'synthetic'}
         else: raise AssertionError('unexpected mock path')
         body={'success':True,'result':result}
         if info: body['result_info']=info
         return Reply(json.dumps(body).encode())
 
-def run(fake):
+def run(fake,allow_stop=False):
     with patch.dict(os.environ,{'CF_TOKEN':'synthetic-token','CF_ACCOUNT':ACCOUNT,'GITHUB_REPOSITORY':'19wolfalone92/Execution-Guard-Lab','GITHUB_REF':'refs/heads/qualification/cloud-runtime-oauth-20261127','GITHUB_RUN_ID':'123','GITHUB_RUN_ATTEMPT':'1','GITHUB_SHA':'c'*40}),patch.object(probe,'opener',fake),patch.object(probe,'report',{'steps':[],'status':'PARTIAL'}) as r:
-        probe.main(); return r
+        try: probe.main()
+        except probe.Stop:
+            if not allow_stop: raise
+        return r
 
 class WriteProbeTests(unittest.TestCase):
     def test_static_write_happy_path(self):
         f=Fake(); r=run(f)
-        self.assertTrue(r['status']=='PASS' and len(f.writes)==5 and f.version==V1 and not f.enabled)
+        self.assertTrue(r['status']=='PASS' and len(f.writes)==6 and f.version==V1 and not f.enabled and f.deleted)
         self.assertTrue(all('/workers/scripts/eglab-probe-123-1' in path for _,path in f.writes))
         self.assertNotIn('synthetic-token',json.dumps(r)); self.assertNotIn(ACCOUNT,json.dumps(r))
+
+    def test_ambiguous_upload_is_read_back_and_cleaned(self):
+        import urllib.error
+        class LostUploadReply(Fake):
+            def open(self,req,timeout):
+                if req.get_method()=='PUT' and '/workers/scripts/eglab-probe-' in req.full_url:
+                    self.writes.append((req.get_method(),req.full_url.split('/client/v4')[-1]))
+                    self.uploads+=1; self.worker_present=True; self.version=V1
+                    raise urllib.error.URLError('synthetic lost response')
+                return super().open(req,timeout)
+        f=LostUploadReply()
+        r=run(f,allow_stop=True)
+        self.assertTrue(f.deleted and not f.worker_present and not f.enabled)
+        self.assertEqual(f.uploads,1)
+        self.assertEqual(r['cleanup_status'],'PASS')
+        self.assertNotIn('synthetic lost response',json.dumps(r))
+        self.assertNotIn('synthetic-token',json.dumps(r))
 
     def test_extra_visible_account_fails_before_mutation(self):
         f=Fake(extra=True)
@@ -61,6 +84,14 @@ class WriteProbeTests(unittest.TestCase):
                     raise urllib.error.HTTPError(req.full_url,403,'denied',{},io.BytesIO(b'sensitive-body'))
                 return super().open(req,timeout)
         f=Denied()
-        with self.assertRaisesRegex(probe.Stop,'HTTPS authorization rejected'):run(f)
-        self.assertEqual(len(f.writes),2)
+        r=run(f,allow_stop=True)
+        self.assertEqual(len(f.writes),4)
         self.assertEqual(f.uploads,1)
+        self.assertFalse(f.enabled)
+        self.assertTrue(f.deleted)
+        rows={row['step']:row for row in r['steps']}
+        evidence=rows['https_eglab-static-v1']
+        self.assertEqual(evidence['http_status'],403)
+        self.assertEqual(evidence['status'],'BLOCKED')
+        self.assertEqual(rows['cleanup_delete_worker']['status'],'PASS')
+        self.assertNotIn('sensitive-body',json.dumps(r))

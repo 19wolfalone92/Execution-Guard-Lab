@@ -41,3 +41,61 @@ def test_ambiguous_source(status,body,headers,indicator):
     assert r['subsequent_operations']=='STOP_UNLESS_EXPECTED' and not r['retry_permitted']
     assert 'credential-DO-NOT-LOG' not in json.dumps(r)
     if status==429:assert r['retry_after_seconds']==60
+
+
+def test_1010_captures_allowlisted_evidence_and_never_raw_body():
+    import io
+    from diagnostics.http_evidence import one_shot
+    headers=Message()
+    headers['CF-Ray']='0123456789abcdef-AMS'
+    headers['Server']='cloudflare'
+    headers['Content-Type']='text/html; charset=utf-8'
+    headers['Set-Cookie']='credential-DO-NOT-LOG'
+    headers['Location']='https://hidden.invalid/path?token=credential-DO-NOT-LOG'
+    body=(b'<html>Cloudflare Error 1010. The owner of this website has banned your access '
+          b'based on your browser signature. Authorization: Bearer secret-value '
+          b'credential-DO-NOT-LOG</html>')
+    class EvidenceFake:
+        calls=0
+        request=None
+        timeout=None
+        def open(self,request,timeout):
+            self.calls+=1; self.request=request; self.timeout=timeout
+            raise urllib.error.HTTPError(URL,403,'credential-DO-NOT-LOG',headers,io.BytesIO(body))
+    fake=EvidenceFake()
+    context={
+        'worker_identifier':'eglab-probe-459-1',
+        'deployment_id':'01234567-89ab-4cde-8fab-0123456789ab',
+        'version_id':'11234567-89ab-4cde-8fab-0123456789ab',
+        'source_sha':'a'*40
+    }
+    result=one_shot(URL,MARK,opener=fake,context=context)
+    assert fake.calls==1 and fake.timeout==10
+    assert fake.request.get_header('User-agent') is None
+    assert result['http_status']==403 and result['status']=='BLOCKED'
+    assert result['cloudflare_error_code']==1010
+    assert result['cloudflare_error_code_source']=='response_body_unverified'
+    assert result['body_fragment']=='Cloudflare Error 1010'
+    assert result['cf_ray']=='0123456789abcdef-AMS'
+    assert result['server_header']=='cloudflare' and result['content_type']=='text/html'
+    assert result['worker_identifier']==context['worker_identifier']
+    assert result['deployment_id']==context['deployment_id']
+    assert result['version_id']==context['version_id'] and result['source_sha']==context['source_sha']
+    assert result['request_id']==result['request_correlation_id']
+    assert result['duration_ms']>=0 and result['stop_reason']=='http_403'
+    assert result['source_attribution']=='UNVERIFIED' and not result['retry_permitted']
+    serialized=json.dumps(result)
+    for forbidden in ('credential-DO-NOT-LOG','secret-value','hidden.invalid','Authorization','Set-Cookie'):
+        assert forbidden not in serialized
+
+
+def test_invalid_context_metadata_is_omitted():
+    from diagnostics.http_evidence import inspect_response
+    result=inspect_response(403,{'Server':'cloudflare'},b'Cloudflare Error 1010',MARK,context={
+        'worker_identifier':'bad worker','deployment_id':'not-a-uuid','version_id':'secret',
+        'source_sha':'z'*40
+    })
+    assert 'worker_identifier' not in result and 'deployment_id' not in result
+    assert 'version_id' not in result and 'source_sha' not in result
+    assert result['cloudflare_error_code']==1010
+    assert result['source_attribution']=='UNVERIFIED'

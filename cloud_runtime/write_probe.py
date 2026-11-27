@@ -4,6 +4,7 @@ Only run in the expressly authorized laboratory workflow.
 """
 import datetime as dt, hashlib, json, os, re, secrets, sys, time, urllib.error, urllib.request, uuid
 from pathlib import Path
+from diagnostics.http_evidence import MAX_BODY, inspect_response
 
 class Stop(Exception): pass
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -27,23 +28,43 @@ def main():
     prefix='/accounts/'+account; script=prefix+'/workers/scripts/'+name
     def api(label,path,method='GET',data=None,ctype='application/json'):
         require(path.startswith(prefix+'/') or path==prefix or path in ('/accounts?per_page=50','/user/tokens/verify'),'out of scope path')
-        if method!='GET': require(path in (script,script+'/subdomain',script+'/deployments'),'out of scope write')
+        allowed_writes={('PUT',script),('POST',script+'/subdomain'),('POST',script+'/deployments'),('DELETE',script)}
+        if method!='GET': require((method,path) in allowed_writes,'out of scope write')
         h={'Authorization':'Bearer '+token,'Accept':'application/json'}
         if data is not None: h['Content-Type']=ctype
         if isinstance(data,dict): data=json.dumps(data).encode()
         req=urllib.request.Request('https://api.cloudflare.com/client/v4'+path,data=data,headers=h,method=method)
+        started=time.perf_counter_ns(); request_id=uuid.uuid4().hex
         try:
             with opener.open(req,timeout=20) as res:
                 status=res.status; body=json.loads(res.read(2_000_001))
         except urllib.error.HTTPError as e:
-            codes=[]
-            try: codes=[x['code'] for x in json.loads(e.read(65536)).get('errors',[]) if isinstance(x.get('code'),int)]
+            raw=b''
+            try: raw=e.read(MAX_BODY+1)
             except Exception: pass
-            record(label,status='FAIL',http=e.code,codes=codes); raise Stop('API rejected '+label) from None
+            codes=[]
+            try:
+                payload=json.loads(raw[:MAX_BODY])
+                codes=[x['code'] for x in payload.get('errors',[]) if isinstance(x.get('code'),int)]
+            except Exception: pass
+            evidence=inspect_response(e.code,e.headers,raw,b'',request_id=request_id,
+                utc=dt.datetime.now(dt.timezone.utc).isoformat(),
+                duration_ms=(time.perf_counter_ns()-started)/1_000_000)
+            keep=('category','cf_ray','server_header','server_class','content_type',
+                  'cloudflare_error_code','cloudflare_error_code_source','indicator',
+                  'body_fragment','body_bytes_sampled','truncated','retry_after_seconds',
+                  'stop_reason','duration_ms')
+            safe={k:evidence[k] for k in keep if k in evidence}
+            record(label,status='FAIL',http=e.code,codes=codes,request_id=request_id,**safe)
+            raise Stop('API rejected '+label) from None
         except Exception as e:
-            record(label,status='UNVERIFIED',error=type(e).__name__); raise Stop('API transport '+label) from None
+            record(label,status='UNVERIFIED',error=type(e).__name__,
+                   request_id=request_id,
+                   duration_ms=round((time.perf_counter_ns()-started)/1_000_000,3))
+            raise Stop('API transport '+label) from None
         require(isinstance(body,dict) and body.get('success') is True,'API unsuccessful '+label)
-        record(label,status='PASS',http=status)
+        record(label,status='PASS',http=status,request_id=request_id,
+               duration_ms=round((time.perf_counter_ns()-started)/1_000_000,3))
         return body
     verified=api('token_active',prefix+'/tokens/verify' if token.startswith('cfat_') else '/user/tokens/verify')['result']
     require(verified.get('status')=='active','inactive token')
@@ -69,23 +90,64 @@ def main():
         d=api(label,script+'/deployments')['result']['deployments'][0]; versions=d['versions']
         require(len(versions)==1 and versions[0]['percentage']==100,'deployment not single version')
         vid=str(uuid.UUID(versions[0]['version_id'])); did=str(uuid.UUID(d['id']))
+        report['deployment_id']=did; report['version_id']=vid
         record('active_version',phase=label,version_id=vid,deployment_id=did); return vid
     def smoke(marker):
         from diagnostics.http_evidence import one_shot
-        result=one_shot(url,marker.encode('ascii'),opener=opener)
+        result=one_shot(url,marker.encode('ascii'),opener=opener,context={
+            'worker_identifier':report.get('worker'),'deployment_id':report.get('deployment_id'),
+            'version_id':report.get('version_id'),'source_sha':report.get('github_sha')})
         record('https_'+marker,**result)
         require(result['status']=='PASS','HTTPS authorization rejected' if result['status']=='BLOCKED' else 'HTTPS verification failed')
+    upload_attempted=False; subdomain_disabled_confirmed=False; cleanup_failures=[]
     first='eglab-static-v1'; second='eglab-static-v2'
-    upload(first); report['created']=True
-    # Verify settings can be read; do not log arbitrary account metadata.
-    settings=api('read_settings',script+'/settings')['result']; require(isinstance(settings,dict),'settings invalid')
-    v1=active('deployment_v1'); state=api('enable_test_subdomain',script+'/subdomain','POST',{'enabled':True,'previews_enabled':False})['result']; require(state.get('enabled') is True,'subdomain not enabled')
-    smoke(first)
-    upload(second); v2=active('deployment_v2'); require(v2!=v1,'version did not change'); smoke(second)
-    api('rollback',script+'/deployments','POST',{'strategy':'percentage','versions':[{'version_id':v1,'percentage':100}]}); require(active('deployment_rollback')==v1,'rollback mismatch'); smoke(first)
-    state=api('disable_test_subdomain',script+'/subdomain','POST',{'enabled':False,'previews_enabled':False})['result']; require(state.get('enabled') is False,'disable not confirmed')
-    readback=api('verify_disabled',script+'/subdomain')['result']; require(readback.get('enabled') is False,'disable readback failed')
-    report['status']='PASS'; report['public_test_endpoint_disabled']=True
+    try:
+        upload_attempted=True
+        upload(first); report['created']=True
+        # Verify settings can be read; do not log arbitrary account metadata.
+        settings=api('read_settings',script+'/settings')['result']; require(isinstance(settings,dict),'settings invalid')
+        v1=active('deployment_v1')
+        state=api('enable_test_subdomain',script+'/subdomain','POST',{'enabled':True,'previews_enabled':False})['result']
+        require(state.get('enabled') is True,'subdomain not enabled')
+        smoke(first)
+        upload(second); v2=active('deployment_v2'); require(v2!=v1,'version did not change'); smoke(second)
+        api('rollback',script+'/deployments','POST',{'strategy':'percentage','versions':[{'version_id':v1,'percentage':100}]})
+        require(active('deployment_rollback')==v1,'rollback mismatch'); smoke(first)
+        state=api('disable_test_subdomain',script+'/subdomain','POST',{'enabled':False,'previews_enabled':False})['result']
+        require(state.get('enabled') is False,'disable not confirmed')
+        readback=api('verify_disabled',script+'/subdomain')['result']; require(readback.get('enabled') is False,'disable readback failed')
+        subdomain_disabled_confirmed=True
+        report['status']='PASS'; report['public_test_endpoint_disabled']=True
+    finally:
+        # Resolve ambiguous upload outcomes by reading back only the collision-checked Worker name.
+        if upload_attempted:
+            try:
+                current=api('cleanup_find_worker',prefix+'/workers/scripts')['result']
+                require(isinstance(current,list),'cleanup worker list invalid')
+                exists=any(w.get('id')==name or w.get('name')==name for w in current)
+                if exists:
+                    if not subdomain_disabled_confirmed:
+                        state=api('cleanup_disable_subdomain',script+'/subdomain','POST',
+                            {'enabled':False,'previews_enabled':False})['result']
+                        require(state.get('enabled') is False,'cleanup disable not confirmed')
+                        report['public_test_endpoint_disabled']=True
+                    api('cleanup_delete_worker',script,'DELETE')
+                    remaining=api('cleanup_verify_worker_absent',prefix+'/workers/scripts')['result']
+                    require(isinstance(remaining,list) and not any(
+                        w.get('id')==name or w.get('name')==name for w in remaining
+                    ),'cleanup worker still present')
+                    report['worker_deleted']=True
+                    record('cleanup_delete_worker',status='PASS')
+                else:
+                    report['worker_deleted']=False
+                    record('cleanup_worker_absent',status='PASS')
+            except Exception as error:
+                cleanup_failures.append('worker_cleanup')
+                record('cleanup_worker',status='FAIL',error=type(error).__name__)
+        report['cleanup_status']='PARTIAL' if cleanup_failures else 'PASS'
+        if cleanup_failures:
+            report['cleanup_failures']=cleanup_failures
+            if report.get('status')=='PASS': report['status']='PARTIAL'
 
 if __name__=='__main__':
     # Cloud lifecycle remains explicitly held. The callable is retained for
