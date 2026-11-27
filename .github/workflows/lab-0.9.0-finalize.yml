@@ -1,0 +1,153 @@
+name: Lab 0.9.0 source finalization and full qualification
+
+on:
+  push:
+    branches:
+      - qualification/cloud-runtime-oauth-20261127
+    paths:
+      - qualification-patches/lab-0.9.0-finalize.patch.gz.b64
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: lab-0.9.0-finalize-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    if: github.repository == '19wolfalone92/Execution-Guard-Lab' && github.ref == 'refs/heads/qualification/cloud-runtime-oauth-20261127'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact trigger commit
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13.18'
+
+      - name: Install locked test dependencies
+        run: python -m pip install --disable-pip-version-check --require-hashes -r requirements.lock
+
+      - name: Apply final patch, run tests, restore historical manifest and commit candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/evidence"
+          base64 --decode qualification-patches/lab-0.9.0-finalize.patch.gz.b64 | gzip -dc > "${RUNNER_TEMP}/lab-0.9.0-finalize.patch"
+          printf '%s  %s\n' '8e967600a1133ae9cb620834533cde6823d9c3f8e4d577eb9bfde313d096d732' "${RUNNER_TEMP}/lab-0.9.0-finalize.patch" | sha256sum --check -
+          git apply --check "${RUNNER_TEMP}/lab-0.9.0-finalize.patch"
+          git apply "${RUNNER_TEMP}/lab-0.9.0-finalize.patch"
+          rm -f qualification-patches/lab-0.9.0-finalize.patch.gz.b64
+          python -m pytest -q --disable-warnings --maxfail=1 --junitxml="${RUNNER_TEMP}/evidence/pytest-results.xml"
+          python scripts/verify.py ACCEPTANCE.json
+          python scripts/verify.py ACCEPTANCE_0.4.0.json
+          git checkout d773f8b61295ee433044231a238f771617837fb5 -- MANIFEST.sha256
+          find . -type d \( -name __pycache__ -o -name .pytest_cache \) -prune -exec rm -rf {} +
+          git add -A
+          python - <<'PY'
+          import hashlib, subprocess
+          from pathlib import Path
+          volatile = {
+              "MANIFEST_0.9.0.sha256",
+              "SDK_EVIDENCE_V2.json",
+              "pytest-results.xml",
+              "qualification-patches/https-diagnostic-ready.txt",
+          }
+          raw = subprocess.check_output(["git", "ls-files", "-z"])
+          paths = sorted(
+              p for p in raw.split(b"\0")
+              if p and p.decode("utf-8") not in volatile
+          )
+          rows = []
+          for raw_path in paths:
+              path = raw_path.decode("utf-8")
+              data = Path(path).read_bytes()
+              rows.append(f"{hashlib.sha256(data).hexdigest()}  {path}")
+          Path("MANIFEST_0.9.0.sha256").write_text("\n".join(rows) + "\n", encoding="utf-8")
+          print(f"Generated stable 0.9.0 manifest: {len(rows)} files")
+          PY
+          python scripts/verify_manifest.py MANIFEST.sha256
+          python scripts/verify_manifest.py MANIFEST_0.4.0.sha256
+          python scripts/verify_manifest.py MANIFEST_0.9.0.sha256
+          git add MANIFEST_0.9.0.sha256
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fix: finalize Lab 0.9.0 source and diagnostic qualification"
+          git push origin HEAD:qualification/cloud-runtime-oauth-20261127
+          candidate_sha="$(git rev-parse HEAD)"
+          printf '%s\n' "$candidate_sha" > "${RUNNER_TEMP}/evidence/source-commit.txt"
+          printf 'CANDIDATE_SHA=%s\n' "$candidate_sha" >> "$GITHUB_ENV"
+
+      - name: Dispatch full regression and Workers runtime qualification
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for workflow in qualification.yml cloud-runtime-qualification.yml; do
+            code="$(curl --silent --show-error --output "${RUNNER_TEMP}/dispatch-response.json" --write-out '%{http_code}' \
+              --request POST \
+              --header "Authorization: Bearer ${GH_TOKEN}" \
+              --header "Accept: application/vnd.github+json" \
+              --header "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow}/dispatches" \
+              --data '{"ref":"qualification/cloud-runtime-oauth-20261127"}')"
+            printf '%s HTTP %s\n' "$workflow" "$code" >> "${RUNNER_TEMP}/evidence/dispatch-status.txt"
+          done
+
+      - name: Generate exact candidate source and integrity evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/evidence"
+          python benchmarks/all_tools.py "${RUNNER_TEMP}/evidence/all-tools.json"
+          candidate_sha="$(cat "${RUNNER_TEMP}/evidence/source-commit.txt")"
+          head_sha="$(git rev-parse HEAD)"
+          printf 'HEAD=%s CANDIDATE=%s\n' "$head_sha" "$candidate_sha"
+          test "$head_sha" = "$candidate_sha"
+          git archive --format=zip --prefix=source/ "$candidate_sha" > "${RUNNER_TEMP}/evidence/source.zip"
+          git ls-tree -r --full-tree "$candidate_sha" > "${RUNNER_TEMP}/evidence/source-tree.txt"
+          sha256sum "${RUNNER_TEMP}/evidence/source.zip" > "${RUNNER_TEMP}/evidence/source.zip.sha256"
+          cp MANIFEST.sha256 MANIFEST_0.4.0.sha256 MANIFEST_0.9.0.sha256 "${RUNNER_TEMP}/evidence/"
+          if python integrated/preflight.py > "${RUNNER_TEMP}/evidence/production-hold.json"; then
+            echo "Production preflight unexpectedly allowed deployment."
+            exit 1
+          fi
+          python -c "import json,sys; d=json.load(open(sys.argv[1])); assert d['status']=='BLOCKED' and all(d['local'].values()) and d['release_allowed'] is False" "${RUNNER_TEMP}/evidence/production-hold.json"
+          python - <<'PY'
+          import hashlib, os, zipfile
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"]) / "evidence"
+          rows = {}
+          for line in (root / "source-tree.txt").read_text().splitlines():
+              meta, name = line.split("\t", 1)
+              rows[name] = meta.split()[2]
+          with zipfile.ZipFile(root / "source.zip") as archive:
+              assert archive.testzip() is None
+              names = {name.removeprefix("source/") for name in archive.namelist() if not name.endswith("/")}
+              assert names == set(rows), (len(names), len(rows))
+              for name, digest in rows.items():
+                  data = archive.read("source/" + name)
+                  actual = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
+                  assert actual == digest, name
+          print(f"PASS: exact source archive, ZIP CRC and {len(rows)} Git blobs")
+          PY
+          python scripts/verify_manifest.py MANIFEST.sha256
+          python scripts/verify_manifest.py MANIFEST_0.4.0.sha256
+          python scripts/verify_manifest.py MANIFEST_0.9.0.sha256
+
+      - name: Upload final 0.9.0 source and qualification evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: execution-guard-lab-0.9.0-final-source-evidence
+          path: ${{ runner.temp }}/evidence/
+          if-no-files-found: warn
+          retention-days: 30
