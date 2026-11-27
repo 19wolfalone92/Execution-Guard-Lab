@@ -1,8 +1,8 @@
-name: Lab 0.7.0 exact source and resource evidence
+name: Lab 0.8.0 candidate exact source and resource evidence
 on:
   push:
     branches: ['qualification/cloud-runtime-oauth-20261127']
-    paths: ['benchmarks/**','.github/workflows/source-bundle.yml']
+    paths: ['benchmarks/**','diagnostics/**','cloud_runtime/**','reports/0.8.0/**','.github/workflows/source-bundle.yml']
 permissions:
   contents: read
 jobs:
@@ -46,7 +46,7 @@ jobs:
           PY
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: lab-source-evidence-${{ github.sha }}
+          name: lab-0.8.0-candidate-source-evidence-${{ github.sha }}
           path: |
             source.zip
             source.zip.sha256

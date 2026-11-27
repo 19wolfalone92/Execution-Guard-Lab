@@ -1,0 +1,24 @@
+tool,L0,L1,L2,L3-local,L3-remote,L4-chatgpt-discovery,L5-chatgpt-call,L6-cross-session,evidence
+text_sha256,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+evidence_bundle_verify,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+acceptance_evaluate,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+workflow_validate,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+test_results_analyze,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+snapshot_compare,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+blocker_classify,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+release_consistency,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+math_calculate,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+statistics_analyze,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+correlation_analyze,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+regression_analyze,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+numerical_compare,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+time_series_analyze,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+dataset_validate,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+completion_verify,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+regression_detect,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+code_structure_analyze,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+artifact_checksum,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+archive_validate,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+equity_drawdown_analyze,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+exam_results_compare,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
+workflow_readiness,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent

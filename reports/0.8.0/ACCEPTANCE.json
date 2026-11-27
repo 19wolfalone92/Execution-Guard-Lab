@@ -1,0 +1,502 @@
+{
+  "version": "0.8.0-candidate",
+  "overall": "PARTIAL / HOLD",
+  "head": "83892d1c00aff04dab56b3db86e7c38ccdb8b116",
+  "tree": "2f3a46ff42e64eb7e959323425d47f45a9dcc744",
+  "qualification_sha": "83892d1c00aff04dab56b3db86e7c38ccdb8b116",
+  "gates": [
+    {
+      "gate": "A",
+      "status": "PASS",
+      "criterion": "Восстановление 0.6.0",
+      "evidence": "Checkpoint rev 1; SHA архива совпал."
+    },
+    {
+      "gate": "B",
+      "status": "PASS",
+      "criterion": "HTTPS diagnosis checkpoint",
+      "evidence": "Revision 2 прочитан; исходный комплект проверен."
+    },
+    {
+      "gate": "C",
+      "status": "PASS",
+      "criterion": "GitHub HEAD",
+      "evidence": "HEAD c1fe9d8, main 94bba84; повторное чтение ref."
+    },
+    {
+      "gate": "D",
+      "status": "PASS",
+      "criterion": "Интеграция сохранена",
+      "evidence": "45940503010: SDK → OAuth → DO → Service Binding → Python."
+    },
+    {
+      "gate": "E",
+      "status": "PASS",
+      "criterion": "Официальные источники",
+      "evidence": "Cloudflare Workers limits, BIC, DO, KV, Free support; RELEASE_HOLD_0.7.0.md."
+    },
+    {
+      "gate": "F",
+      "status": "PASS",
+      "criterion": "Гипотеза BIC",
+      "evidence": "Совпадает с официально документированным поведением urllib; не подтверждение инцидента."
+    },
+    {
+      "gate": "G",
+      "status": "BLOCKED",
+      "criterion": "Первопричина отказа",
+      "evidence": "Исходный HTTP-код, Ray ID, заголовки и тело отсутствуют."
+    },
+    {
+      "gate": "H",
+      "status": "PASS",
+      "criterion": "Комплекты поддержки",
+      "evidence": "Два ZIP, CRC и SHA-256 подтверждены; не отправлены."
+    },
+    {
+      "gate": "I",
+      "status": "BLOCKED",
+      "criterion": "Допустимое восстановление",
+      "evidence": "Нет технического заключения по инциденту; запрос не повторялся."
+    },
+    {
+      "gate": "J",
+      "status": "PASS",
+      "criterion": "Диагностика",
+      "evidence": "Новые синтетические индикаторы, 44 целевых pytest PASS; ложная атрибуция не допускается."
+    },
+    {
+      "gate": "K",
+      "status": "PASS",
+      "criterion": "23 инструмента сохранены",
+      "evidence": "96 SDK checks, 23 инструмента; 92 сравнительных случая."
+    },
+    {
+      "gate": "L",
+      "status": "PASS",
+      "criterion": "393 исходных pytest",
+      "evidence": "409/409 на финальном SHA, 0 failures/errors/skips."
+    },
+    {
+      "gate": "M",
+      "status": "PASS",
+      "criterion": "96 SDK",
+      "evidence": "45940919379, 96/96."
+    },
+    {
+      "gate": "N",
+      "status": "PASS",
+      "criterion": "69 runtime",
+      "evidence": "45940322303, 69/69."
+    },
+    {
+      "gate": "O",
+      "status": "PASS",
+      "criterion": "230 стресс-вызовов",
+      "evidence": "23×10, correct=true."
+    },
+    {
+      "gate": "P",
+      "status": "PASS",
+      "criterion": "22 OAuth",
+      "evidence": "45940503092, 22/22, synthetic."
+    },
+    {
+      "gate": "Q",
+      "status": "PASS",
+      "criterion": "8 Node.js",
+      "evidence": "45940503010, расширенный набор 12/12."
+    },
+    {
+      "gate": "R",
+      "status": "PASS",
+      "criterion": "23 integrated",
+      "evidence": "45940503010, 2 sessions, 46 positive + 46 negative +23 stress."
+    },
+    {
+      "gate": "S",
+      "status": "PARTIAL",
+      "criterion": "GitHub OAuth App",
+      "evidence": "Конфигурация и инструкция готовы; регистрация отложена до действительного callback."
+    },
+    {
+      "gate": "T",
+      "status": "BLOCKED",
+      "criterion": "Реальная идентификация",
+      "evidence": "Нет зарегистрированного приложения и живого consent."
+    },
+    {
+      "gate": "U",
+      "status": "PARTIAL",
+      "criterion": "Production owner consent",
+      "evidence": "Локальный synthetic consent и identity mock; живой не испытан."
+    },
+    {
+      "gate": "V",
+      "status": "PARTIAL",
+      "criterion": "Production OAuth lifecycle",
+      "evidence": "Refresh/revoke локально; KV cross-location replay/revocation не квалифицированы."
+    },
+    {
+      "gate": "W",
+      "status": "PARTIAL",
+      "criterion": "Изоляция Python",
+      "evidence": "Private config, direct core denied в CI; deployed isolation не испытана."
+    },
+    {
+      "gate": "X",
+      "status": "PASS",
+      "criterion": "Внутреннее соединение",
+      "evidence": "Service Binding, synthetic auth negative checks, отдельный ключ; локально."
+    },
+    {
+      "gate": "Y",
+      "status": "PARTIAL",
+      "criterion": "Распределённый rate limit",
+      "evidence": "SQLite DO, 180 global/160 client за 60 s; две локальные Workers, 11/11; cloud не проверен."
+    },
+    {
+      "gate": "Z",
+      "status": "PARTIAL",
+      "criterion": "Распределённая параллельность",
+      "evidence": "4 глобальных места, 12 concurrent admissions; persisted slots; cloud не проверен."
+    },
+    {
+      "gate": "AA",
+      "status": "PARTIAL",
+      "criterion": "Ротация ключей",
+      "evidence": "Локальные тесты current/previous; облачная ротация не выполнялась."
+    },
+    {
+      "gate": "AB",
+      "status": "PARTIAL",
+      "criterion": "AST профилирование",
+      "evidence": "Parse, walk, schema, serialize, 3 сценария; отдельные gateway/service CPU не измерены."
+    },
+    {
+      "gate": "AC",
+      "status": "PASS",
+      "criterion": "Оптимизация",
+      "evidence": "Native dense AST v0.6 21.004948 → v0.7 15.182937 ms median; память без снижения."
+    },
+    {
+      "gate": "AD",
+      "status": "PASS",
+      "criterion": "Эквивалентность",
+      "evidence": "92/92 representative cases, 3680 повторов, 0 unexpected errors; не исчерпывающий proof."
+    },
+    {
+      "gate": "AE",
+      "status": "PARTIAL",
+      "criterion": "CPU/RAM",
+      "evidence": "Native per-tool p50/p95/p99, allocations; process RSS, no isolate metrics."
+    },
+    {
+      "gate": "AF",
+      "status": "UNVERIFIED",
+      "criterion": "Cloudflare Free",
+      "evidence": "10 ms CPU, 128 MB limits; максимальный AST native >10 ms, нет облачной телеметрии."
+    },
+    {
+      "gate": "AG",
+      "status": "PARTIAL",
+      "criterion": "Ресурсные ограничения",
+      "evidence": "Существующие schema/size bounds и DO gate; нет подтверждённого hard CPU cutoff или новой adaptive модели."
+    },
+    {
+      "gate": "AH",
+      "status": "PASS",
+      "criterion": "Аудит зависимостей",
+      "evidence": "35 Python + 6 WASM; npm audit 0 известных; не полный аудит production."
+    },
+    {
+      "gate": "AI",
+      "status": "BLOCKED",
+      "criterion": "Production preflight",
+      "evidence": "45940919471 production-hold.json: release_allowed=false."
+    },
+    {
+      "gate": "AJ",
+      "status": "BLOCKED",
+      "criterion": "HTTPS восстановление",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AK",
+      "status": "BLOCKED",
+      "criterion": "Облачная квалификация",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AL",
+      "status": "BLOCKED",
+      "criterion": "Промышленное развёртывание",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AM",
+      "status": "BLOCKED",
+      "criterion": "MCP URL",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AN",
+      "status": "BLOCKED",
+      "criterion": "Удалённый OAuth",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AO",
+      "status": "BLOCKED",
+      "criterion": "Удалённый MCP SDK",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AP",
+      "status": "BLOCKED",
+      "criterion": "Удалённое обнаружение 23",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AQ",
+      "status": "BLOCKED",
+      "criterion": "Удалённые вызовы 23",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AR",
+      "status": "BLOCKED",
+      "criterion": "Удалённая эквивалентность",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AS",
+      "status": "BLOCKED",
+      "criterion": "Регистрация ChatGPT",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AT",
+      "status": "BLOCKED",
+      "criterion": "Обнаружение ChatGPT",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AU",
+      "status": "BLOCKED",
+      "criterion": "Вызовы ChatGPT",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AV",
+      "status": "BLOCKED",
+      "criterion": "Межсессионная стабильность",
+      "evidence": "Неразрешённый HTTPS-отказ; production deployment не выполнялся."
+    },
+    {
+      "gate": "AW",
+      "status": "PASS",
+      "criterion": "Воспроизводимость",
+      "evidence": "Exact git archive, 136/136 blobs, reconstructed tree 257bb147, source SHA; CI twice identical."
+    },
+    {
+      "gate": "AX",
+      "status": "PASS",
+      "criterion": "Нет платных ресурсов",
+      "evidence": "В этой задаче облачных операций/покупок не выполнялось."
+    },
+    {
+      "gate": "AY",
+      "status": "PASS",
+      "criterion": "Pro не изменён",
+      "evidence": "Readback main a61f1061, PR5 open unmerged 097466cd, checkpoint rev43."
+    },
+    {
+      "gate": "AZ",
+      "status": "PASS",
+      "criterion": "Нет обхода",
+      "evidence": "Ни одного запроса к отклонённому endpoint, другой сети/UA, cloud write; HOLD сохранён."
+    },
+    {
+      "gate": "BA",
+      "status": "PASS",
+      "criterion": "Доказательства и контрольные точки",
+      "evidence": "Артефакты сверены с GitHub digest; checkpoint создаётся и повторно читается отдельно."
+    },
+    {
+      "gate": "BB",
+      "status": "PASS",
+      "criterion": "Итоговые артефакты",
+      "evidence": "SHA/CRC, manifest; итоговый архив проверяется после записи."
+    },
+    {
+      "gate": "BC",
+      "status": "PASS",
+      "criterion": "Полное сравнение архитектур Pro и Lab",
+      "evidence": "Создана 34-строчная матрица с путями к исходникам Pro main/candidate и Lab 0.7.0."
+    },
+    {
+      "gate": "BD",
+      "status": "PARTIAL",
+      "criterion": "Сравнение успешных и неуспешных deployment",
+      "evidence": "Pro direct Wrangler Preview успешен; Lab REST upload/version/subdomain успешны, но public smoke остановлен. Сопоставимость аккаунта и security settings не доказана."
+    },
+    {
+      "gate": "BE",
+      "status": "UNVERIFIED",
+      "criterion": "Подтверждённая первопричина HTTPS-отказа",
+      "evidence": "Исторический job сообщает только BLOCKED / HTTPS authorization rejected. Нет точного HTTP-кода, CF-Ray, headers и body. BIC/Error 1010 согласуется с urllib без UA, но не подтверждён."
+    },
+    {
+      "gate": "BF",
+      "status": "PASS",
+      "criterion": "Безопасная полная HTTP-диагностика",
+      "evidence": "HTTP evidence дополнен status, CF-Ray, Content-Type, Server, allowlisted body fragment, UTC, duration, request correlation ID, Worker/deployment/version IDs, category и stop reason. 412 pytest PASS."
+    },
+    {
+      "gate": "BG",
+      "status": "BLOCKED",
+      "criterion": "Допустимое восстановление HTTPS",
+      "evidence": "Новый запрос к исторически отказавшему endpoint не выполнялся; разрешение/ответ поддержки отсутствует."
+    },
+    {
+      "gate": "BH",
+      "status": "BLOCKED",
+      "criterion": "Воспроизводимый изолированный deployment",
+      "evidence": "Lab Cloudflare deployment не выполнялся. Wrangler production/preview config и endpoint не квалифицированы."
+    },
+    {
+      "gate": "BI",
+      "status": "BLOCKED",
+      "criterion": "Реальная идентификация владельца",
+      "evidence": "Lab OAuth проверен только с synthetic identity в локальной интеграции; собственный Lab OAuth App не зарегистрирован."
+    },
+    {
+      "gate": "BJ",
+      "status": "BLOCKED",
+      "criterion": "Атомарный OAuth lifecycle",
+      "evidence": "Lab OAuth state хранится через KV; строгая атомарность authorization-code/refresh-token операций между locations не доказана."
+    },
+    {
+      "gate": "BK",
+      "status": "BLOCKED",
+      "criterion": "Распределённая replay protection",
+      "evidence": "Нет подтверждённого атомарного DO/SQLite погашения authorization code и refresh-token family в облаке."
+    },
+    {
+      "gate": "BL",
+      "status": "BLOCKED",
+      "criterion": "Согласованный token revocation",
+      "evidence": "Локальный synthetic revoke проходит; межрегиональная/облачная согласованность отзыва не проверена."
+    },
+    {
+      "gate": "BM",
+      "status": "PARTIAL",
+      "criterion": "Безопасное admission recovery",
+      "evidence": "SQLite Durable Object: 11/11 локальных concurrency/restart checks PASS. Неопределённое завершение по-прежнему fail-closed; lease/fencing доказательства прекращения операции отсутствуют."
+    },
+    {
+      "gate": "BN",
+      "status": "BLOCKED",
+      "criterion": "Реальная облачная CPU-квалификация",
+      "evidence": "Есть native CPython и local workerd timings, но Cloudflare isolate CPU telemetry отсутствует."
+    },
+    {
+      "gate": "BO",
+      "status": "BLOCKED",
+      "criterion": "Реальная облачная RAM-квалификация",
+      "evidence": "Есть host process RSS для local workerd; peak RAM Cloudflare isolate недоступен и не измерен."
+    },
+    {
+      "gate": "BP",
+      "status": "PARTIAL",
+      "criterion": "Подтверждённая изоляция Python Worker",
+      "evidence": "Service Binding и direct-core denial проверены в local workerd; cloud deployment/isolation не проверены."
+    },
+    {
+      "gate": "BQ",
+      "status": "BLOCKED",
+      "criterion": "Удалённое обнаружение 23 инструментов",
+      "evidence": "Удалённый MCP endpoint отсутствует; remote tools/list = 0/23."
+    },
+    {
+      "gate": "BR",
+      "status": "BLOCKED",
+      "criterion": "Удалённые вызовы 23 инструментов",
+      "evidence": "Remote tools/call = 0/23; cloud invocation не выполнялся."
+    },
+    {
+      "gate": "BS",
+      "status": "BLOCKED",
+      "criterion": "Регистрация отдельного плагина Lab",
+      "evidence": "Endpoint и real OAuth отсутствуют; текущий Plus план не поддерживает custom MCP connections."
+    },
+    {
+      "gate": "BT",
+      "status": "BLOCKED",
+      "criterion": "Обнаружение 23 инструментов в ChatGPT",
+      "evidence": "Lab app не подключён; ChatGPT discovery = 0/23."
+    },
+    {
+      "gate": "BU",
+      "status": "BLOCKED",
+      "criterion": "Практические вызовы 23 инструментов из ChatGPT",
+      "evidence": "ChatGPT tools/call = 0/23."
+    },
+    {
+      "gate": "BV",
+      "status": "BLOCKED",
+      "criterion": "Межсессионная стабильность",
+      "evidence": "Проверены две локальные synthetic sessions, но не удалённые ChatGPT sessions."
+    },
+    {
+      "gate": "BW",
+      "status": "PASS",
+      "criterion": "Полная регрессия",
+      "evidence": "На code SHA 83892d1: 412 pytest PASS; MCP SDK 96/96; 23 tools; integrated local 46 positive/negative + 23 stress; distributed 11/11; Python Workers local workerd 69/69; dependency audits без уязвимостей."
+    },
+    {
+      "gate": "BX",
+      "status": "PARTIAL",
+      "criterion": "Независимая проверка безопасности",
+      "evidence": "pip-audit: 0 findings; npm audit: 0 vulnerabilities; статический review выполнен. Независимый внешний penetration/security review не проводился."
+    },
+    {
+      "gate": "BY",
+      "status": "PASS",
+      "criterion": "Неизменность Execution Guard Pro",
+      "evidence": "Pro использован только READ ONLY; main SHA a61f1061…, PR #5 остаётся open/draft на candidate 097466cd…; owner whoami подтверждён."
+    },
+    {
+      "gate": "BZ",
+      "status": "BLOCKED",
+      "criterion": "Production rollback qualification",
+      "evidence": "Lab production deployment не выполнялся; rollback в Cloudflare production не тестировался."
+    },
+    {
+      "gate": "CA",
+      "status": "BLOCKED",
+      "criterion": "Финальная проверка промышленного релиза",
+      "evidence": "Обязательные remote/OAuth/ChatGPT/cloud gates не пройдены; release HOLD."
+    }
+  ],
+  "counts": {
+    "PASS": 30,
+    "FAIL": 0,
+    "PARTIAL": 14,
+    "BLOCKED": 33,
+    "UNVERIFIED": 2
+  },
+  "tools": {
+    "L0": 23,
+    "L1": 23,
+    "L2": 23,
+    "L3-local": 23,
+    "Integrated Local MCP": 23,
+    "L3-remote": 0,
+    "L4": 0,
+    "L5": 0,
+    "L6": 0
+  },
+  "note": "Gates A-BB preserved byte-for-byte from the 0.7.0 acceptance ledger. Gates BC-CA appended from the 0.8.0 task. PASS denotes only the evidence stated per gate; no remote or production claims are inferred."
+}

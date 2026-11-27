@@ -1,0 +1,80 @@
+gate,status,criterion,evidence,next_action
+A,PASS,Восстановление 0.6.0,Checkpoint rev 1; SHA архива совпал.,
+B,PASS,HTTPS diagnosis checkpoint,Revision 2 прочитан; исходный комплект проверен.,
+C,PASS,GitHub HEAD,"HEAD c1fe9d8, main 94bba84; повторное чтение ref.",
+D,PASS,Интеграция сохранена,45940503010: SDK → OAuth → DO → Service Binding → Python.,
+E,PASS,Официальные источники,"Cloudflare Workers limits, BIC, DO, KV, Free support; RELEASE_HOLD_0.7.0.md.",
+F,PASS,Гипотеза BIC,Совпадает с официально документированным поведением urllib; не подтверждение инцидента.,
+G,BLOCKED,Первопричина отказа,"Исходный HTTP-код, Ray ID, заголовки и тело отсутствуют.",
+H,PASS,Комплекты поддержки,"Два ZIP, CRC и SHA-256 подтверждены; не отправлены.",
+I,BLOCKED,Допустимое восстановление,Нет технического заключения по инциденту; запрос не повторялся.,
+J,PASS,Диагностика,"Новые синтетические индикаторы, 44 целевых pytest PASS; ложная атрибуция не допускается.",
+K,PASS,23 инструмента сохранены,"96 SDK checks, 23 инструмента; 92 сравнительных случая.",
+L,PASS,393 исходных pytest,"409/409 на финальном SHA, 0 failures/errors/skips.",
+M,PASS,96 SDK,"45940919379, 96/96.",
+N,PASS,69 runtime,"45940322303, 69/69.",
+O,PASS,230 стресс-вызовов,"23×10, correct=true.",
+P,PASS,22 OAuth,"45940503092, 22/22, synthetic.",
+Q,PASS,8 Node.js,"45940503010, расширенный набор 12/12.",
+R,PASS,23 integrated,"45940503010, 2 sessions, 46 positive + 46 negative +23 stress.",
+S,PARTIAL,GitHub OAuth App,Конфигурация и инструкция готовы; регистрация отложена до действительного callback.,
+T,BLOCKED,Реальная идентификация,Нет зарегистрированного приложения и живого consent.,
+U,PARTIAL,Production owner consent,Локальный synthetic consent и identity mock; живой не испытан.,
+V,PARTIAL,Production OAuth lifecycle,Refresh/revoke локально; KV cross-location replay/revocation не квалифицированы.,
+W,PARTIAL,Изоляция Python,"Private config, direct core denied в CI; deployed isolation не испытана.",
+X,PASS,Внутреннее соединение,"Service Binding, synthetic auth negative checks, отдельный ключ; локально.",
+Y,PARTIAL,Распределённый rate limit,"SQLite DO, 180 global/160 client за 60 s; две локальные Workers, 11/11; cloud не проверен.",
+Z,PARTIAL,Распределённая параллельность,"4 глобальных места, 12 concurrent admissions; persisted slots; cloud не проверен.",
+AA,PARTIAL,Ротация ключей,Локальные тесты current/previous; облачная ротация не выполнялась.,
+AB,PARTIAL,AST профилирование,"Parse, walk, schema, serialize, 3 сценария; отдельные gateway/service CPU не измерены.",
+AC,PASS,Оптимизация,Native dense AST v0.6 21.004948 → v0.7 15.182937 ms median; память без снижения.,
+AD,PASS,Эквивалентность,"92/92 representative cases, 3680 повторов, 0 unexpected errors; не исчерпывающий proof.",
+AE,PARTIAL,CPU/RAM,"Native per-tool p50/p95/p99, allocations; process RSS, no isolate metrics.",
+AF,UNVERIFIED,Cloudflare Free,"10 ms CPU, 128 MB limits; максимальный AST native >10 ms, нет облачной телеметрии.",
+AG,PARTIAL,Ресурсные ограничения,Существующие schema/size bounds и DO gate; нет подтверждённого hard CPU cutoff или новой adaptive модели.,
+AH,PASS,Аудит зависимостей,35 Python + 6 WASM; npm audit 0 известных; не полный аудит production.,
+AI,BLOCKED,Production preflight,45940919471 production-hold.json: release_allowed=false.,
+AJ,BLOCKED,HTTPS восстановление,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AK,BLOCKED,Облачная квалификация,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AL,BLOCKED,Промышленное развёртывание,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AM,BLOCKED,MCP URL,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AN,BLOCKED,Удалённый OAuth,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AO,BLOCKED,Удалённый MCP SDK,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AP,BLOCKED,Удалённое обнаружение 23,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AQ,BLOCKED,Удалённые вызовы 23,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AR,BLOCKED,Удалённая эквивалентность,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AS,BLOCKED,Регистрация ChatGPT,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AT,BLOCKED,Обнаружение ChatGPT,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AU,BLOCKED,Вызовы ChatGPT,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AV,BLOCKED,Межсессионная стабильность,Неразрешённый HTTPS-отказ; production deployment не выполнялся.,
+AW,PASS,Воспроизводимость,"Exact git archive, 136/136 blobs, reconstructed tree 257bb147, source SHA; CI twice identical.",
+AX,PASS,Нет платных ресурсов,В этой задаче облачных операций/покупок не выполнялось.,
+AY,PASS,Pro не изменён,"Readback main a61f1061, PR5 open unmerged 097466cd, checkpoint rev43.",
+AZ,PASS,Нет обхода,"Ни одного запроса к отклонённому endpoint, другой сети/UA, cloud write; HOLD сохранён.",
+BA,PASS,Доказательства и контрольные точки,Артефакты сверены с GitHub digest; checkpoint создаётся и повторно читается отдельно.,
+BB,PASS,Итоговые артефакты,"SHA/CRC, manifest; итоговый архив проверяется после записи.",
+BC,PASS,Полное сравнение архитектур Pro и Lab,Создана 34-строчная матрица с путями к исходникам Pro main/candidate и Lab 0.7.0.,
+BD,PARTIAL,Сравнение успешных и неуспешных deployment,"Pro direct Wrangler Preview успешен; Lab REST upload/version/subdomain успешны, но public smoke остановлен. Сопоставимость аккаунта и security settings не доказана.",
+BE,UNVERIFIED,Подтверждённая первопричина HTTPS-отказа,"Исторический job сообщает только BLOCKED / HTTPS authorization rejected. Нет точного HTTP-кода, CF-Ray, headers и body. BIC/Error 1010 согласуется с urllib без UA, но не подтверждён.",Obtain Cloudflare edge evidence or explicit authorization for one diagnostic request
+BF,PASS,Безопасная полная HTTP-диагностика,"HTTP evidence дополнен status, CF-Ray, Content-Type, Server, allowlisted body fragment, UTC, duration, request correlation ID, Worker/deployment/version IDs, category и stop reason. 412 pytest PASS.",
+BG,BLOCKED,Допустимое восстановление HTTPS,Новый запрос к исторически отказавшему endpoint не выполнялся; разрешение/ответ поддержки отсутствует.,Wait for support/owner clearance; do not retry before authorization
+BH,BLOCKED,Воспроизводимый изолированный deployment,Lab Cloudflare deployment не выполнялся. Wrangler production/preview config и endpoint не квалифицированы.,
+BI,BLOCKED,Реальная идентификация владельца,Lab OAuth проверен только с synthetic identity в локальной интеграции; собственный Lab OAuth App не зарегистрирован.,Implement and cloud-qualify atomic Lab OAuth state using SQLite-backed Durable Object
+BJ,BLOCKED,Атомарный OAuth lifecycle,Lab OAuth state хранится через KV; строгая атомарность authorization-code/refresh-token операций между locations не доказана.,Implement and cloud-qualify atomic Lab OAuth state using SQLite-backed Durable Object
+BK,BLOCKED,Распределённая replay protection,Нет подтверждённого атомарного DO/SQLite погашения authorization code и refresh-token family в облаке.,Implement and cloud-qualify atomic Lab OAuth state using SQLite-backed Durable Object
+BL,BLOCKED,Согласованный token revocation,Локальный synthetic revoke проходит; межрегиональная/облачная согласованность отзыва не проверена.,Implement and cloud-qualify atomic Lab OAuth state using SQLite-backed Durable Object
+BM,PARTIAL,Безопасное admission recovery,SQLite Durable Object: 11/11 локальных concurrency/restart checks PASS. Неопределённое завершение по-прежнему fail-closed; lease/fencing доказательства прекращения операции отсутствуют.,
+BN,BLOCKED,Реальная облачная CPU-квалификация,"Есть native CPython и local workerd timings, но Cloudflare isolate CPU telemetry отсутствует.",Measure isolate CPU/RAM on an authorized Lab preview deployment
+BO,BLOCKED,Реальная облачная RAM-квалификация,Есть host process RSS для local workerd; peak RAM Cloudflare isolate недоступен и не измерен.,Measure isolate CPU/RAM on an authorized Lab preview deployment
+BP,PARTIAL,Подтверждённая изоляция Python Worker,Service Binding и direct-core denial проверены в local workerd; cloud deployment/isolation не проверены.,
+BQ,BLOCKED,Удалённое обнаружение 23 инструментов,Удалённый MCP endpoint отсутствует; remote tools/list = 0/23.,Obtain eligible ChatGPT plan and a real Lab endpoint/OAuth
+BR,BLOCKED,Удалённые вызовы 23 инструментов,Remote tools/call = 0/23; cloud invocation не выполнялся.,Obtain eligible ChatGPT plan and a real Lab endpoint/OAuth
+BS,BLOCKED,Регистрация отдельного плагина Lab,Endpoint и real OAuth отсутствуют; текущий Plus план не поддерживает custom MCP connections.,Obtain eligible ChatGPT plan and a real Lab endpoint/OAuth
+BT,BLOCKED,Обнаружение 23 инструментов в ChatGPT,Lab app не подключён; ChatGPT discovery = 0/23.,Obtain eligible ChatGPT plan and a real Lab endpoint/OAuth
+BU,BLOCKED,Практические вызовы 23 инструментов из ChatGPT,ChatGPT tools/call = 0/23.,Obtain eligible ChatGPT plan and a real Lab endpoint/OAuth
+BV,BLOCKED,Межсессионная стабильность,"Проверены две локальные synthetic sessions, но не удалённые ChatGPT sessions.",Obtain eligible ChatGPT plan and a real Lab endpoint/OAuth
+BW,PASS,Полная регрессия,На code SHA 83892d1: 412 pytest PASS; MCP SDK 96/96; 23 tools; integrated local 46 positive/negative + 23 stress; distributed 11/11; Python Workers local workerd 69/69; dependency audits без уязвимостей.,
+BX,PARTIAL,Независимая проверка безопасности,pip-audit: 0 findings; npm audit: 0 vulnerabilities; статический review выполнен. Независимый внешний penetration/security review не проводился.,
+BY,PASS,Неизменность Execution Guard Pro,"Pro использован только READ ONLY; main SHA a61f1061…, PR #5 остаётся open/draft на candidate 097466cd…; owner whoami подтверждён.",
+BZ,BLOCKED,Production rollback qualification,Lab production deployment не выполнялся; rollback в Cloudflare production не тестировался.,Complete preview qualification before any production release
+CA,BLOCKED,Финальная проверка промышленного релиза,Обязательные remote/OAuth/ChatGPT/cloud gates не пройдены; release HOLD.,Complete preview qualification before any production release

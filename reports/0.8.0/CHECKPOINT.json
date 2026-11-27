@@ -1,0 +1,55 @@
+{
+  "project": "Execution Guard Lab",
+  "release": "0.8.0-candidate",
+  "status": "PARTIAL / HOLD",
+  "baseline": {
+    "branch": "qualification/cloud-runtime-oauth-20261127",
+    "head": "c1fe9d871d10385a3ec7b1d938936d4ca2d27801",
+    "tree": "257bb14724f7f9892c87730e50559abb867d1b1f",
+    "source_archive_sha256": "c2716eda27d0d125d65d91b421b269c1dda77dd27deedbe2b4eebd65c776702a",
+    "prior_checkpoint": {
+      "id": "execution-guard-lab-0-7-0",
+      "revision": 2,
+      "restored_and_reread": true
+    },
+    "original_release_archive_sha256_recorded": "fd853203b7bca44b02bfadf3daf1fcd4cff0d2279e468ac26ee024417d7f22b0"
+  },
+  "qualified_code": {
+    "commit": "83892d1c00aff04dab56b3db86e7c38ccdb8b116",
+    "parent": "c1fe9d871d10385a3ec7b1d938936d4ca2d27801",
+    "tree": "2f3a46ff42e64eb7e959323425d47f45a9dcc744",
+    "files": [
+      "diagnostics/http_evidence.py",
+      "diagnostics/test_http_evidence.py",
+      "cloud_runtime/write_probe.py",
+      "cloud_runtime/test_write_probe.py"
+    ],
+    "tests": {
+      "pytest": "412/412 PASS",
+      "mcp_sdk": "96/96 PASS",
+      "integrated_local": "23/23 tools; 46 positive/negative; 23 stress; PASS",
+      "distributed_admission": "11/11 PASS",
+      "python_workers_workerd": "69/69 PASS; parallel PASS",
+      "pip_audit": "0 vulnerabilities",
+      "npm_audit": "0 vulnerabilities"
+    }
+  },
+  "blocked": {
+    "https_root_cause": "UNVERIFIED",
+    "lab_cloud_deployment": "NOT PERFORMED",
+    "oauth_real_owner": "NOT QUALIFIED",
+    "remote_mcp_tools": "0/23",
+    "chatgpt_tools": "0/23",
+    "cloud_cpu_ram": "NOT MEASURED"
+  },
+  "safety": {
+    "execution_guard_pro": "READ_ONLY",
+    "pro_repo_or_deployment_modified": false,
+    "cloudflare_write_performed": false,
+    "user_agent_changed": false,
+    "route_or_network_changed": false,
+    "paid_plan_activated": false,
+    "chatgpt_lab_app_registered": false
+  },
+  "note": "This project-side checkpoint records the qualified Lab code SHA. The Pro checkpoint store was only read; no Pro checkpoint was written."
+}
