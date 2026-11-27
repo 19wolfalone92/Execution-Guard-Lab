@@ -29,7 +29,8 @@ jobs:
           npm audit --audit-level=high --json > ../integrated-npm-audit.json
       - name: Diagnostics offline and prepare unchanged kernel
         run: |
-          python -m pytest -q diagnostics cloud_runtime/test_write_probe.py
+          python -m pytest -q diagnostics cloud_runtime/test_write_probe.py integrated/tests/test_optimized.py
+          python integrated/tests/benchmark.py native-resource-comparison.json
           cp lab.py extensions.py integrated/core/src/
           openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj '/CN=127.0.0.1' -addext 'subjectAltName=IP:127.0.0.1' -keyout "$RUNNER_TEMP/lab-key.pem" -out "$RUNNER_TEMP/lab-cert.pem"
       - name: Launch Python core locally (loopback only)
@@ -65,4 +66,7 @@ jobs:
           path: |
             integrated-evidence.json
             integrated-npm-audit.json
+            native-resource-comparison.json
+            integrated/core/uv.lock
+            integrated/core/pylock.toml
           if-no-files-found: warn

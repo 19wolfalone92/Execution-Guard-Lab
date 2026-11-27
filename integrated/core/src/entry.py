@@ -2,7 +2,9 @@
 import hmac, json
 from urllib.parse import urlsplit
 from workers import WorkerEntrypoint, Response
-from lab import decode, rpc, MAX_LINE
+from lab import decode, rpc, MAX_LINE, TOOLS
+from optimized import install
+install(TOOLS)
 
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
@@ -12,7 +14,7 @@ class Default(WorkerEntrypoint):
         actual=request.headers.get('X-Lab-Internal') or ''
         if not isinstance(expected,str) or len(expected)<32 or not hmac.compare_digest(actual.encode(),expected.encode()):
             return Response('Forbidden',status=403)
-        if request.headers.get('X-Lab-Scope')!='lab:read' or not request.headers.get('X-Lab-Subject'):
+        if request.headers.get('X-Lab-Scope')!='lab:read' or request.headers.get('X-Lab-Subject')!=getattr(self.env,'OWNER_ID',None):
             return Response('Forbidden',status=403)
         try:
             raw=await request.bytes()

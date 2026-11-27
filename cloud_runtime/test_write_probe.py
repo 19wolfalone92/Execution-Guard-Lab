@@ -52,3 +52,15 @@ class WriteProbeTests(unittest.TestCase):
         f=Fake(extra=True)
         with self.assertRaisesRegex(probe.Stop,'isolation read guard failed'): run(f)
         self.assertEqual(f.writes,[])
+
+    def test_denial_stops_without_more_writes(self):
+        import urllib.error, io
+        class Denied(Fake):
+            def open(self,req,timeout):
+                if 'workers.dev/health' in req.full_url:
+                    raise urllib.error.HTTPError(req.full_url,403,'denied',{},io.BytesIO(b'sensitive-body'))
+                return super().open(req,timeout)
+        f=Denied()
+        with self.assertRaisesRegex(probe.Stop,'HTTPS authorization rejected'):run(f)
+        self.assertEqual(len(f.writes),2)
+        self.assertEqual(f.uploads,1)

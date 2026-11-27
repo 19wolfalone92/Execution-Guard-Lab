@@ -88,8 +88,7 @@ def main():
     report['status']='PASS'; report['public_test_endpoint_disabled']=True
 
 if __name__=='__main__':
-    try: main()
-    except Stop as e: record('stop',status='BLOCKED',reason=str(e)); report['status']='BLOCKED'
-    except Exception as e: record('stop',status='FAIL',error=type(e).__name__); report['status']='FAIL'
-    finally: Path('cloud-write-evidence.json').write_text(json.dumps(report,indent=2)+'\n')
-    sys.exit(0 if report['status']=='PASS' else 1)
+    # Cloud lifecycle remains explicitly held. The callable is retained for
+    # isolated mocks only; authorized recovery requires a reviewed new release.
+    print('HOLD: original HTTPS denial unresolved; no cloud operations performed')
+    sys.exit(1)
