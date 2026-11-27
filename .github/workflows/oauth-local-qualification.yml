@@ -23,13 +23,13 @@ jobs:
       - name: Install official provider and local Workers runtime without secrets
         run: |
           node --version
-          npm install --package-lock-only --ignore-scripts
           npm ci --ignore-scripts
           npm audit --audit-level=high --json > ../oauth-audit.json
       - name: Run local OAuth wire flow against workerd
         run: |
           npm test
           node --test identity.test.mjs
+          git diff --exit-code -- package-lock.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

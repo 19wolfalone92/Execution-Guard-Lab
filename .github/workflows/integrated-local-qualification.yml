@@ -24,9 +24,11 @@ jobs:
           python -m pip install --require-hashes -r requirements.lock
           python -m pip install 'uv==0.13.4'
           cd oauth_runtime
-          npm install --package-lock-only --ignore-scripts
           npm ci --ignore-scripts
           npm audit --audit-level=high --json > ../integrated-npm-audit.json
+      - name: Two independent local workerd instances share persistent admission
+        working-directory: oauth_runtime
+        run: node distributed.test.mjs
       - name: Diagnostics offline and prepare unchanged kernel
         run: |
           python -m pytest -q diagnostics cloud_runtime/test_write_probe.py integrated/tests/test_optimized.py integrated/tests/test_key_rotation.py
@@ -38,7 +40,7 @@ jobs:
       - name: Launch Python core locally (loopback only)
         run: |
           cd integrated/core
-          uv lock
+          uv lock --check
           uv run --locked pywrangler dev --local --ip 127.0.0.1 --port 8791 > ../../integrated-core.log 2>&1 &
           echo $! > "$RUNNER_TEMP/core.pid"
           for i in $(seq 1 90); do
@@ -57,6 +59,8 @@ jobs:
           exit 1
       - name: Official SDK through OAuth and Python core
         run: python integrated/tests/qualify.py "$RUNNER_TEMP/lab-cert.pem"
+      - name: Verify committed dependency locks
+        run: git diff --exit-code -- oauth_runtime/package-lock.json integrated/core/uv.lock integrated/core/pylock.toml
       - name: Stop local processes
         if: always()
         run: |
@@ -70,6 +74,7 @@ jobs:
             integrated-npm-audit.json
             native-resource-comparison.json
             ast-profile.json
+            distributed-evidence.json
             integrated/core/uv.lock
             integrated/core/pylock.toml
           if-no-files-found: warn

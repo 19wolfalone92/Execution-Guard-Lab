@@ -33,7 +33,7 @@ jobs:
       - name: Start official Python Workers local runtime (no cloud credentials)
         working-directory: cloud_runtime
         run: |
-          uv lock
+          uv lock --check
           uv run --locked pywrangler --version
           uv run --locked pywrangler dev --local --ip 127.0.0.1 --port 8789 > ../workerd.log 2>&1 &
           echo $! > ../workerd.pid
@@ -56,6 +56,8 @@ jobs:
           Path('cloud-worker-pins.txt').write_text(''.join(f"{p['name']}=={p['version']}\n" for p in packages))
           PY
           pip-audit --strict --no-deps --disable-pip --format json --output cloud-worker-audit.json -r cloud-worker-pins.txt
+      - name: Verify committed dependency locks
+        run: git diff --exit-code -- cloud_runtime/uv.lock cloud_runtime/pylock.toml
       - name: Stop probe
         if: always()
         run: |
