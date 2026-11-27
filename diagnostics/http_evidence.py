@@ -16,6 +16,7 @@ from urllib.parse import urlsplit
 
 MAX_BODY = 4096
 MAX_TIMEOUT_SECONDS = 10
+USER_AGENT = "ExecutionGuardLab/0.9.0"
 _CF_ERROR_CODE = re.compile(rb"(?i)\b(?:cloudflare\s+)?error\s+([0-9]{4})\b")
 _BIC_TEXT = re.compile(
     rb"(?i)the owner of this website has banned your access based on your browser.s signature"
@@ -136,6 +137,11 @@ def inspect_response(
     if _SAFE_RAY.fullmatch(ray):
         result["cf_ray"] = ray
 
+    for header_name, evidence_name in (("CF-Error-Type", "cf_error_type"), ("CF-Error-Origin", "cf_error_origin")):
+        value = _header(headers, header_name)
+        if value and re.fullmatch(r"[A-Za-z0-9._/-]{1,64}", value):
+            result[evidence_name] = value
+
     server = _header(headers, "Server")
     server_class = server.lower() if server.lower() in (
         "cloudflare", "nginx", "envoy", "github.com"
@@ -199,14 +205,16 @@ def one_shot(url, expected, *, opener=None, context=None):
         "stage": "https_smoke",
         "request_id": identifier,
         "request_correlation_id": identifier,
+        "user_agent": USER_AGENT,
         **_safe_context(context),
     }
     opener = opener or urllib.request.build_opener(NoRedirect())
-    # Deliberately do not set or spoof User-Agent. This is not an alternate
-    # client strategy and must not be used to bypass a prior denial.
+    # Identify the actual application truthfully. This is the documented
+    # Cloudflare workers.dev remedy for non-browser clients; never spoof a browser.
     req = urllib.request.Request(
         url,
         headers={
+            "User-Agent": USER_AGENT,
             "Cache-Control": "no-cache",
             "X-Lab-Diagnostic-ID": identifier,
         },

@@ -50,6 +50,8 @@ def test_1010_captures_allowlisted_evidence_and_never_raw_body():
     headers['CF-Ray']='0123456789abcdef-AMS'
     headers['Server']='cloudflare'
     headers['Content-Type']='text/html; charset=utf-8'
+    headers['CF-Error-Type']='1010'
+    headers['CF-Error-Origin']='security'
     headers['Set-Cookie']='credential-DO-NOT-LOG'
     headers['Location']='https://hidden.invalid/path?token=credential-DO-NOT-LOG'
     body=(b'<html>Cloudflare Error 1010. The owner of this website has banned your access '
@@ -71,12 +73,14 @@ def test_1010_captures_allowlisted_evidence_and_never_raw_body():
     }
     result=one_shot(URL,MARK,opener=fake,context=context)
     assert fake.calls==1 and fake.timeout==10
-    assert fake.request.get_header('User-agent') is None
+    assert fake.request.get_header('User-agent') == 'ExecutionGuardLab/0.9.0'
+    assert result['user_agent'] == 'ExecutionGuardLab/0.9.0'
     assert result['http_status']==403 and result['status']=='BLOCKED'
     assert result['cloudflare_error_code']==1010
     assert result['cloudflare_error_code_source']=='response_body_unverified'
     assert result['body_fragment']=='Cloudflare Error 1010'
     assert result['cf_ray']=='0123456789abcdef-AMS'
+    assert result['cf_error_type']=='1010' and result['cf_error_origin']=='security'
     assert result['server_header']=='cloudflare' and result['content_type']=='text/html'
     assert result['worker_identifier']==context['worker_identifier']
     assert result['deployment_id']==context['deployment_id']
