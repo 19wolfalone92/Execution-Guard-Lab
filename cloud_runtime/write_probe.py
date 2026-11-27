@@ -16,6 +16,7 @@ import urllib.error
 import urllib.request
 import uuid
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from diagnostics.http_evidence import MAX_BODY, USER_AGENT, inspect_response
 
@@ -127,7 +128,7 @@ def main():
         and os.environ.get("GITHUB_REF") == "refs/heads/qualification/cloud-runtime-oauth-20261127",
         "repository_or_ref_mismatch",
     )
-    require(bool(re.fullmatch(r"\d{1,20}", run)) and bool(re.fullmatch(r"\d{1,4}", attempt)), "run_id_invalid")
+    require(bool(re.fullmatch(r"\d{1,20}", run)) and attempt == "1", "run_id_invalid_or_diagnostic_rerun_forbidden")
 
     name = f"eglab-probe-{run}-{attempt}"
     report.update(worker=name, github_sha=os.environ.get("GITHUB_SHA"))
