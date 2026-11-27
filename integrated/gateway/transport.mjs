@@ -1,7 +1,28 @@
 const MAX=128*1024,OUT=1024*1024;
 const allowed=new Set(['2025-03-26','2025-06-18','2025-11-25']);
 const fail=(s)=>new Response(null,{status:s,headers:{'Cache-Control':'no-store'}});
-async function bounded(body,max){if(!body)return new Uint8Array();const reader=body.getReader(),chunks=[];let n=0;try{for(;;){const {done,value}=await reader.read();if(done)break;n+=value.length;if(n>max){await reader.cancel();throw new RangeError();}chunks.push(value);}const result=new Uint8Array(n);let off=0;for(const c of chunks){result.set(c,off);off+=c.length;}return result;}finally{reader.releaseLock();}}
+class ReadDeadline extends Error {}
+async function bounded(body,max,timeoutMs=5000){
+ if(!body)return new Uint8Array();const reader=body.getReader(),chunks=[];let n=0,timer;
+ const deadline=new Promise((_,reject)=>{timer=setTimeout(()=>reject(new ReadDeadline()),timeoutMs);});
+ try{
+  for(;;){const {done,value}=await Promise.race([reader.read(),deadline]);if(done)break;n+=value.length;if(n>max)throw new RangeError();chunks.push(value);}
+  const result=new Uint8Array(n);let off=0;for(const c of chunks){result.set(c,off);off+=c.length;}return result;
+ }catch(e){void reader.cancel().catch(()=>{});throw e;}finally{clearTimeout(timer);reader.releaseLock();}
+}
+// All OAuth POST bodies are bounded before the official library reads them.
+// Force S256 even for confidential clients, not just public registrations.
+export function guardedOAuth(app){return {async fetch(request,env,ctx){
+ const u=new URL(request.url);
+ if(u.pathname==='/authorize'&&request.method==='GET'){
+  if(u.searchParams.getAll('code_challenge').length!==1||u.searchParams.getAll('code_challenge_method').length!==1||!/^[-_A-Za-z0-9]{43}$/.test(u.searchParams.get('code_challenge')||'')||u.searchParams.get('code_challenge_method')!=='S256')return fail(400);
+ }
+ if(request.method==='POST'&&u.pathname!=='/mcp'){
+  try{const data=await bounded(request.body,u.pathname==='/authorize'?8192:MAX);request=new Request(request,{body:data});}
+  catch(e){return fail(e instanceof RangeError?413:e instanceof ReadDeadline?408:400);}
+ }
+ return app.fetch(request,env,ctx);
+}};}
 export function resourceHandler(issuer){
  let active=0,windowStart=0,count=0;
  return async (request,env,ctx)=>{
@@ -21,6 +42,6 @@ export function resourceHandler(issuer){
    if(![200,202,400,413].includes(response.status))return fail(503);
    const payload=await bounded(response.body,OUT);
    return new Response(response.status===202?null:payload,{status:response.status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
-  }catch(e){return fail(e instanceof RangeError?413:503);}finally{active--;}
+  }catch(e){return fail(e instanceof RangeError?413:e instanceof ReadDeadline?408:503);}finally{active--;}
  };
 }

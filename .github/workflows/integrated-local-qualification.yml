@@ -30,6 +30,7 @@ jobs:
       - name: Diagnostics offline and prepare unchanged kernel
         run: |
           python -m pytest -q diagnostics cloud_runtime/test_write_probe.py integrated/tests/test_optimized.py
+          node --test oauth_runtime/identity.test.mjs integrated/gateway/transport.test.mjs
           python integrated/tests/benchmark.py native-resource-comparison.json
           cp lab.py extensions.py integrated/core/src/
           openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj '/CN=127.0.0.1' -addext 'subjectAltName=IP:127.0.0.1' -keyout "$RUNNER_TEMP/lab-key.pem" -out "$RUNNER_TEMP/lab-cert.pem"

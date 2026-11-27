@@ -27,7 +27,9 @@ jobs:
           npm ci --ignore-scripts
           npm audit --audit-level=high --json > ../oauth-audit.json
       - name: Run local OAuth wire flow against workerd
-        run: npm test
+        run: |
+          npm test
+          node --test identity.test.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

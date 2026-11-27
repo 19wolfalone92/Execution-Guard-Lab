@@ -12,7 +12,7 @@ export const githubIdentity={
     requireConfig(env);
     const res=await fetch('https://github.com/login/oauth/access_token',{method:'POST',redirect:'error',headers:{Accept:'application/json','Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:env.GITHUB_OAUTH_CLIENT_ID,client_secret:env.GITHUB_OAUTH_CLIENT_SECRET,code,code_verifier:verifier,redirect_uri:redirectUri})});
     if(!res.ok)return null;const token=await res.json();
-    if(typeof token.access_token!=='string'||token.error||String(token.scope||'').trim()!=='')return null;
+    if(typeof token.access_token!=='string'||!token.access_token||token.error||token.scope!==''||String(token.token_type||'').toLowerCase()!=='bearer')return null;
     const profile=await fetch('https://api.github.com/user',{redirect:'error',headers:{Authorization:'Bearer '+token.access_token,Accept:'application/vnd.github+json','User-Agent':'Execution-Guard-Lab'}});
     if(!profile.ok)return null;const data=await profile.json();
     // Do not store or forward the upstream access token.
