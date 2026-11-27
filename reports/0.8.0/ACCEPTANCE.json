@@ -345,7 +345,7 @@
       "gate": "BE",
       "status": "UNVERIFIED",
       "criterion": "Подтверждённая первопричина HTTPS-отказа",
-      "evidence": "Исторический job сообщает только BLOCKED / HTTPS authorization rejected. Нет точного HTTP-кода, CF-Ray, headers и body. BIC/Error 1010 согласуется с urllib без UA, но не подтверждён."
+      "evidence": "Cloudflare documents the default Python urllib User-Agent on *.workers.dev as a common Error 1010 cause and notes these blocks may not appear in Security Events or Worker logs. Lab matches this client pattern; historical status, body and CF-Ray were not retained, so incident root cause remains UNVERIFIED."
     },
     {
       "gate": "BF",

@@ -45,7 +45,7 @@ See PRO_VS_LAB.csv for the 34-row matrix and PRO_VS_LAB_SOURCE_MAP.md for immuta
 
 The historical failed job (run 45906590372, job 140204684223) records a generic BLOCKED / HTTPS authorization rejected after the test worker had been uploaded, activated and exposed through the temporary workers.dev subdomain. It does not preserve the exact status, CF-Ray, response headers or response body. The old 401/403 exception branch raised a generic stop without retaining that evidence.
 
-The Python urllib client had no explicit User-Agent. Cloudflare documents Error 1010 as a browser-signature denial. That is consistent with the BIC hypothesis, but it does not prove that the historical request received Error 1010; the original status itself was not preserved. Other edge policies, account settings, Access/routing configuration or a different HTTP response remain possible.
+The Python urllib client had no explicit User-Agent. Cloudflare's current Error 1010 documentation explicitly lists requests to *.workers.dev with the default Python urllib User-Agent as a common cause. It also says Browser Integrity Check applies to workers.dev and such blocks may not appear in zone Security Events or Worker logs; support cannot override the security setting, and BIC cannot be turned off for workers.dev. This makes BIC/Error 1010 the leading technical hypothesis. It still does not prove the historical incident received Error 1010: the exact status, CF-Ray, headers and body were discarded. Other edge policies or an alternative response therefore cannot be excluded.
 
 No request was repeated, no User-Agent or route was changed, no alternate network/client was used, and no Cloudflare security control was bypassed.
 
