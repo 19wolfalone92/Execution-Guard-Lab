@@ -47,7 +47,8 @@ jobs:
           python -m pytest -q --disable-warnings --maxfail=1 --junitxml="${RUNNER_TEMP}/evidence/pytest-results.xml"
           python scripts/verify.py ACCEPTANCE.json
           python scripts/verify.py ACCEPTANCE_0.4.0.json
-          git fetch --no-tags --depth=1 origin d773f8b61295ee433044231a238f771617837fb5\n          git checkout FETCH_HEAD -- MANIFEST.sha256
+          git fetch --no-tags --depth=1 origin d773f8b61295ee433044231a238f771617837fb5
+          git checkout FETCH_HEAD -- MANIFEST.sha256
           find . -type d \( -name __pycache__ -o -name .pytest_cache \) -prune -exec rm -rf {} +
           git add -A
           python - <<'PY'
