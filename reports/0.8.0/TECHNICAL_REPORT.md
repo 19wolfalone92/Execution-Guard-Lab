@@ -25,6 +25,8 @@ The local qualification is stronger than the 0.7.0 baseline:
 
 These are local/synthetic qualifications. They do **not** establish a public Lab endpoint, real Lab OAuth, Cloudflare production CPU/RAM, remote MCP, or ChatGPT availability.
 
+The 23-tool native comparison matrix currently contains four explicit cases per tool: baseline, stress, negative and schema_boundary. Each case has 20 baseline and 20 candidate samples, producing 92/92 equivalent cases and 3,680 paired samples with zero unexpected errors. This is not the full six-category grid requested: there is no separate minimal-input case, and the reference is the prior baseline implementation rather than an external oracle. The MCP integration separately exercises 46 positive/negative calls and 23 stress calls.
+
 ## 2. What blocked Lab while Pro worked
 
 The code comparison shows several material differences:

@@ -1,5 +1,5 @@
 tool,L0,L1,L2,L3-local,L3-remote,L4-chatgpt-discovery,L5-chatgpt-call,L6-cross-session,evidence
-text_sha256,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; 92 CPython-native scenarios; integrated local service binding; synthetic identity; remote endpoint absent
+text_sha256,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; 4 cases/tool (baseline/stress/negative/schema_boundary); 20 baseline+candidate repeats; 92/92 equivalent; 3680 paired samples; no separate minimal/external oracle; integrated local service binding; synthetic identity; remote absent
 evidence_bundle_verify,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
 acceptance_evaluate,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
 workflow_validate,PASS,PASS,PASS,PASS,BLOCKED,BLOCKED,BLOCKED,BLOCKED,SDK v2 loopback TLS; integrated local service binding; synthetic identity; remote endpoint absent
