@@ -10,6 +10,7 @@ on:
 permissions:
   contents: write
   actions: write
+  workflows: write
 
 concurrency:
   group: lab-0.9.0-finalize-${{ github.ref }}
