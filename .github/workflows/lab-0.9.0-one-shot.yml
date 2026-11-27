@@ -141,7 +141,7 @@ jobs:
               assert names == set(rows), (len(names), len(rows))
               for name, digest in rows.items():
                   data = archive.read("source/" + name)
-                  actual = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\\0" + data).hexdigest()
+                  actual = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
                   assert actual == digest, name
           print(f"PASS: exact source archive, ZIP CRC and {len(rows)} Git blobs")
           PY
