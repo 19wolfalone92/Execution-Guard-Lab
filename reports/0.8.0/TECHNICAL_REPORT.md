@@ -88,14 +88,14 @@ OAuth state remains in KV and is not covered by the admission DO's atomic transa
 
 ## 8. CPU, RAM and Cloudflare Free
 
-The 0.8.0 source-bundle benchmark contains 92 CPython-native scenarios across 23 tools (baseline, stress, negative and representative schema-boundary cases; 20 samples per case). Latest native CPython resource comparison:
+The 0.8.0 source-bundle benchmark contains 92 CPython-native scenarios across 23 tools (baseline, stress, negative and representative schema-boundary cases; 20 samples per case). Two source-bundle samples on the same code tree show normal host-load variation:
 
-| Tool / case | p50 CPU | p95 CPU | Peak Python allocation |
+| Tool / case | Run e04a p50 / p95 | Run 03ff p50 / p95 | Peak Python allocation |
 |---|---:|---:|---:|
-| code_structure_analyze, stress | 17.579 ms | 29.184 ms | 9,930,078 bytes |
-| code_structure_analyze, schema_boundary | 15.228 ms | 15.898 ms | 9,930,101 bytes |
-| time_series_analyze, stress | 2.440 ms | 2.452 ms | 8,505 bytes |
-| time_series_analyze, schema_boundary | 5.455 ms | 5.485 ms | 18,333 bytes |
+| code_structure_analyze, stress | 17.579 / 29.184 ms | 19.941 / 20.145 ms | about 9.93 MB |
+| code_structure_analyze, schema_boundary | 15.228 / 15.898 ms | 18.550 / 19.077 ms | about 9.93 MB |
+| time_series_analyze, stress | 2.440 / 2.452 ms | 2.672 / 2.788 ms | about 8.5 KB |
+| time_series_analyze, schema_boundary | 5.455 / 5.485 ms | 6.306 / 6.386 ms | about 18.4 KB |
 
 These are native CPython timings, not Cloudflare isolate CPU measurements. Local workerd executed all 69 vectors, but the evidence explicitly has worker_cpu_ms=null and worker_ram_bytes=null. Its host process RSS is not per-isolate Cloudflare RAM and must not be presented as such.
 
