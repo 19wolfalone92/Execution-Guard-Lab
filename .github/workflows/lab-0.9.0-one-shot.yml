@@ -5,7 +5,7 @@ on:
     branches:
       - qualification/cloud-runtime-oauth-20261127
     paths:
-      - qualification-patches/lab-0.9.0-followup.patch.gz.b64
+      - qualification-patches/lab-0.9.0-final.patch.gz.b64
 
 permissions:
   contents: write
@@ -39,11 +39,11 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "${RUNNER_TEMP}/evidence"
-          base64 --decode qualification-patches/lab-0.9.0-followup.patch.gz.b64 | gzip -dc > "${RUNNER_TEMP}/lab-0.9.0.patch"
-          printf '%s  %s\n' 'f07eb8065335533ccd67ea7668a6e23b889b297d1aca4ecadb8757b6c5aeca51' "${RUNNER_TEMP}/lab-0.9.0.patch" | sha256sum --check -
+          base64 --decode qualification-patches/lab-0.9.0-final.patch.gz.b64 | gzip -dc > "${RUNNER_TEMP}/lab-0.9.0.patch"
+          printf '%s  %s\n' '16f7ec417a520c5eb3a27e7cb731fa4105bd099fa961d53a3db35309f74f9b6a' "${RUNNER_TEMP}/lab-0.9.0.patch" | sha256sum --check -
           git apply --check "${RUNNER_TEMP}/lab-0.9.0.patch"
           git apply "${RUNNER_TEMP}/lab-0.9.0.patch"
-          rm -f qualification-patches/lab-0.9.0-followup.patch.gz.b64
+          rm -f qualification-patches/lab-0.9.0-final.patch.gz.b64
           python -m pytest -q --disable-warnings --maxfail=1 --junitxml="${RUNNER_TEMP}/evidence/pytest-results.xml"
           python scripts/verify.py ACCEPTANCE.json
           if python integrated/preflight.py > "${RUNNER_TEMP}/evidence/production-hold.json"; then
