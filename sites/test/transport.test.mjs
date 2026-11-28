@@ -6,6 +6,7 @@ import { acquire } from "../worker/admission.js";
 import { createWorker } from "../worker/handler.js";
 import { endpoint, headers, rpc, send, setup } from "./runtime.mjs";
 
+const { version: expectedVersion } = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const rawCall = (name, args) => rpc("tools/call", { name, arguments: args });
 
@@ -16,7 +17,7 @@ test("built artifact: native MCP transport and original diagnostics", async t =>
   await t.test("catalog and discover", async () => {
     const d = await (await send(agent, rpc("server/discover"))).json();
     assert.deepEqual(d.result.supportedVersions, ["2026-07-28"]);
-    assert.equal(d.result.serverInfo.version, "1.0.3");
+    assert.equal(d.result.serverInfo.version, expectedVersion);
     const r = await (await send(agent, rpc("tools/list"))).json();
     const canonical = JSON.parse(await readFile(new URL("../worker/catalog.json", import.meta.url), "utf8"));
     assert.deepEqual(r.result.tools.map(row => row.name), ["lab_health", "lab_sha256", "lab_numeric_verify", ...canonical.map(row => row.name)]);
@@ -30,7 +31,7 @@ test("built artifact: native MCP transport and original diagnostics", async t =>
 
   await t.test("home and identity gate", async () => {
     const page = await agent.fetch("https://synthetic-owner.example.invalid/");
-    assert.match(await page.text(), /1\.0\.2/);
+    assert.ok((await page.text()).includes(`Версия ${expectedVersion} ·`));
     assert.match(page.headers.get("content-security-policy"), /frame-ancestors 'self' https:\/\/chatgpt.com/);
     const anonymous = await send(agent, rawCall("lab_health", {}), { "content-type": "application/json" });
     assert.equal(anonymous.status, 401);
@@ -62,8 +63,8 @@ test("built artifact: native MCP transport and original diagnostics", async t =>
       assert.deepEqual(value, expected);
       assert.deepEqual(JSON.parse(r.result.content[0].text), r.result.structuredContent);
     }
-    await check("lab_health", {}, { version: "1.0.3", status: "ok" });
-    await check("lab_health", {}, { version: "1.0.3", status: "ok" });
+    await check("lab_health", {}, { version: expectedVersion, status: "ok" });
+    await check("lab_health", {}, { version: expectedVersion, status: "ok" });
     for (const text of ["", "abc", "🐺".repeat(4096)]) {
       await check("lab_sha256", { text }, { sha256: createHash("sha256").update(text).digest("hex") });
     }
