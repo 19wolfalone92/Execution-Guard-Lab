@@ -13,6 +13,14 @@ const start = `UPDATE lab_admission SET active=1, reserved_until=NULL, run_token
     AND reserved_until=?2 AND reserved_until>unixepoch()
     AND (SELECT count(*) FROM lab_admission WHERE active=1)<4`;
 const read = "SELECT active, reserved_until, run_token FROM lab_admission WHERE lease=?";
+// Only the activation caller that has NOT obtained a successful admission may
+// use this transition. Invalidate an unstarted reservation or its own uncertain
+// activation; never touch an execution with another fence. The tombstone also
+// prevents a delayed activation from starting after cancellation commits.
+const abandonBeforeCompute = `UPDATE lab_admission
+  SET active=0, reserved_until=NULL, run_token=?3
+  WHERE lease=?1 AND ((active=0 AND run_token IS NULL AND reserved_until=?2)
+    OR (active=1 AND run_token=?3))`;
 const finish = "UPDATE lab_admission SET active=0 WHERE lease=?1 AND active=1 AND run_token=?2";
 
 export function reservation(lease) {
@@ -71,7 +79,17 @@ export async function activate(db, { lease, until }) {
   const result = await transition(db, lease,
     () => [db.prepare(start).bind(lease, until, fence)],
     row => row?.active === 1 && row.run_token === fence);
-  if (result.status !== 200) return result;
+  if (result.status !== 200) {
+    // 503 means activation may have committed, but this invocation will NOT
+    // enter compute. Safe to revoke its own fence, not a potentially running
+    // different owner. If D1 remains unavailable, retain fail-closed behavior.
+    if (result.status === 503) {
+      try {
+        await db.prepare(abandonBeforeCompute).bind(lease, until, fence).run();
+      } catch { /* unconfirmed cancellation: retain the authoritative D1 state */ }
+    }
+    return result;
+  }
   return { ...result, release: () => release(db, lease, fence) };
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "execution-guard-lab-sites",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "dependencies": {
     "@bjorn3/browser_wasi_shim": "0.4.2"
