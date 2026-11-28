@@ -1,0 +1,8 @@
+.cache/
+dist/
+node_modules/
+__pycache__/
+worker/kernel.wasm
+worker/stdlib.zip
+worker/THIRD_PARTY_NOTICES.txt
+.evidence/

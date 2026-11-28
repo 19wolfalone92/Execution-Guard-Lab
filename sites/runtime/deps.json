@@ -1,0 +1,6 @@
+{
+  "cpython": ["https://www.python.org/ftp/python/3.13.17/Python-3.13.17.tgz", "9cb057caa588f122577a5054a22531cd9c23ab6706f1a19bc95a55380a895177"],
+  "python_build": ["https://github.com/brettcannon/cpython-wasi-build/releases/download/v3.13.17/_build-python-3.13.17-wasi_sdk-24.zip", "6cbbf9388dbfcbffc2738ba0e9ba3ed00e07940dd3d46a0645e057650a9f38c2"],
+  "sdk": ["https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-24/wasi-sdk-24.0-x86_64-linux.tar.gz", "c6c38aab56e5de88adf6c1ebc9c3ae8da72f88ec2b656fb024eda8d4167a0bc5"],
+  "zlib": ["https://codeload.github.com/madler/zlib/tar.gz/refs/tags/v1.3.2", "b99a0b86c0ba9360ec7e78c4f1e43b1cbdf1e6936c8fa0f6835c0cd694a495a1"]
+}
