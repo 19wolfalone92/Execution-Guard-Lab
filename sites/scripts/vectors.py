@@ -146,6 +146,49 @@ def edge_cases():
             'scope':'bounded_zip_structure_and_crc_not_malware_scan',
         }, 'Independent constructed ZIP headers and data'
 
+def extended_cases():
+    adjacent = [math.nextafter(1e12, -math.inf), 1e12]
+    x = [999999999901, 999999999904, 999999999907, 999999999910]
+    y = [666666666600, 666666666602, 666666666604, 666666666606]
+    base = [17, -5, 3, -11, 7]
+    for name, args in [
+        ('math_calculate', {'a': 10**12, 'b': -(10**12), 'operation': 'multiply'}),
+        ('math_calculate', {'a': 999999999999.9999, 'b': 1e12, 'operation': 'subtract'}),
+        ('statistics_analyze', {'values': adjacent}),
+        ('statistics_analyze', {'values': [10**12 - i % 4 for i in range(256)]}),
+        ('statistics_analyze', {'values': [-1e12] * 256}),
+        ('correlation_analyze', {'x': adjacent, 'y': [0, 1]}),
+        ('correlation_analyze', {'x': adjacent, 'y': [1, 0]}),
+        ('regression_analyze', {'x': adjacent, 'y': [0, 1]}),
+        ('regression_analyze', {'x': x, 'y': y}),
+        ('regression_analyze', {'x': x, 'y': [-7] * 4}),
+        ('time_series_analyze', {'values': base, 'window': 3}),
+        ('time_series_analyze', {'values': base + [10**12], 'window': 3}),
+        ('time_series_analyze', {'values': [i - 128 for i in range(256)], 'window': 256}),
+    ]:
+        yield name, args, exact_math(name,args), 'Independent Fraction oracle; paired prefix/suffix tests for time series'
+    yield 'correlation_analyze', {'x': adjacent, 'y': [3,3]}, 'constant_series', 'Analytical zero variance'
+    yield 'regression_analyze', {'x': [2,2], 'y': [0,1]}, 'constant_predictor', 'Analytical zero variance'
+    yield 'equity_drawdown_analyze', {'equity': [100,200,150,200,150,210]}, {
+        'max_drawdown_fraction': 0.25, 'peak_index':1, 'trough_index':2, 'scope':'supplied_equity_curve_only',
+    }, 'Enumerated drawdown pairs, first peak/trough on a tie'
+    txt = 'ё🧪\tA\r\n中'
+    yield 'text_sha256', {'text': txt}, {'sha256': hashlib.sha256(txt.encode('utf-8')).hexdigest()}, 'Native SHA-256 independent of WASM digest'
+    yield 'artifact_checksum', {'data_base64':'a===','expected_sha256':'0'*64}, 'invalid_base64', 'Malformed alphabet padding'
+    yield 'workflow_validate', {'steps':[{'id':'a','depends_on':['b']},{'id':'b','depends_on':['a']}]}, {
+        'valid':False,'reason':'cycle','unresolved':['a','b'],
+    }, 'Analytical 2-node cycle'
+    yield 'test_results_analyze', {'results':[{'id':'test1','status':'unknown'}]}, 'invalid_arguments', 'Input enum'
+    yield 'acceptance_evaluate', {'criteria':[{'id':'x','status':'PASS','evidence_text':'','evidence_sha256':hashlib.sha256(b'').hexdigest()}]}, {
+        'criteria':[{'id':'x','status':'UNVERIFIED','digest_matches':False}],
+        'declared_pass_with_matching_digest':False,'scope':'declarations_and_digest_only_not_independent_acceptance',
+    }, 'Missing evidence fails the declared PASS'
+    yield 'code_structure_analyze', {'source':'def f():\n    return "plain synthetic text"\n'}, {
+        'syntax_valid':True,'nodes':5,'functions':1,'branch_nodes':0,'import_roots':[],
+        'scope':'python_ast_only_not_execution_or_full_complexity',
+    }, 'Analytical AST shape for inert input'
+
+
 def generate():
     corpus = cases()
     base = {c['name']:c['expected'] for c in corpus if c['case']=='baseline'}
@@ -172,7 +215,12 @@ def generate():
     assert len(rows) == 115
     for name,args,expected,source in edge_cases():
         rows.append(dict(tool=name,inputs=args,expected=expected,oracle=source,case='edge',session=1))
-    return [dict(id=f'{"H" if i<115 else "E"}{i+1 if i<115 else i-114:03}', **row) for i,row in enumerate(rows)]
+    assert len(rows) == 151
+    ids = [dict(id=f'{"H" if i<115 else "E"}{i+1 if i<115 else i-114:03}', **row) for i,row in enumerate(rows)]
+    for i, (name, args, expected, source) in enumerate(extended_cases(), 1):
+        ids.append(dict(id=f'X{i:03}', tool=name, inputs=args, expected=expected,
+                        oracle=source, case='extended', session=1))
+    return ids
 
 def assert_equal(actual, expected):
     if type(expected) is dict:
@@ -221,7 +269,7 @@ def compare(path, fixtures, out):
         results.append({'id':case['id'],'session':case['session'],'tool':case['tool'],'case':case['case'],
                         'oracle':case['oracle'],'status':verdict,'request_id_or_failure':detail,
                         'http':r['status'],'response_bytes':r['response_bytes'],'client_ms':r['client_ms']})
-    for tag, filename in (('H','115-SCENARIOS.csv'),('E','BOUNDARY-CASES.csv')):
+    for tag, filename in (('H','115-SCENARIOS.csv'),('E','BOUNDARY-CASES.csv'),('X','EXTENDED-CASES.csv')):
         rows = [r for r in results if r['id'].startswith(tag)]
         with (Path(out)/filename).open('w',encoding='utf-8',newline='') as f:
             w = csv.DictWriter(f,fieldnames=list(rows[0]))
@@ -231,6 +279,12 @@ def compare(path, fixtures, out):
         print(filename,len(rows)-len(failed),'/',len(rows),'passed')
         for failure in failed:
             print(failure['id'],failure['tool'],failure['request_id_or_failure'])
+    extended = {row['id']: json.loads(row['wire']).get('result', {}).get('structuredContent', {})
+                for row in revision['rows'] if row['id'].startswith('X') and row['status'] == 200}
+    prefix, suffix = extended.get('X011', {}), extended.get('X012', {})
+    if prefix.get('moving_average') != suffix.get('moving_average', [])[:-1]:
+        print('Causal prefix invariant failed')
+        return 1
     return 1 if any(r['status']!='PASS' for r in results) else 0
 
 if __name__ == '__main__':

@@ -19,7 +19,7 @@ test("admission reconciles missing D1 responses with one bounded retry", async t
       },
     }, "acquire-" + fault);
     assert.equal(slot.status, 200, fault);
-    assert.equal(attempts, 2);
+    assert.equal(attempts, 3);
     assert.equal(await active(), 1);
     assert.ok(await slot.release());
     assert.equal(await active(), 0);
@@ -31,7 +31,7 @@ test("admission reconciles missing D1 responses with one bounded retry", async t
       batch: db.batch.bind(db),
       prepare(sql) {
         const stmt = db.prepare(sql);
-        if (!sql.startsWith("UPDATE")) return stmt;
+        if (!sql.startsWith("UPDATE lab_admission SET active=0")) return stmt;
         return { bind(...args) {
           const bound = stmt.bind(...args);
           return { async run() {

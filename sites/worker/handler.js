@@ -2,7 +2,7 @@ import catalog from "./catalog.json" with { type: "json" };
 import { acquire } from "./admission.js";
 import { parseRequest } from "./envelope.js";
 
-const version = "1.0.1";
+const version = "1.0.2";
 const protocol = "2026-07-28";
 const maxBody = 128 * 1024;
 const maxDiagnosticBody = 32 * 1024;
@@ -144,10 +144,10 @@ async function diagnostic(id, params, request_id) {
 }
 
 const encoder = new TextEncoder();
-const home = '<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Execution Guard Lab</title><main><h1>Execution Guard Lab</h1><p>Версия 1.0.1 · 23 вычислительных и 3 диагностических инструмента MCP</p></main></html>';
+const home = '<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Execution Guard Lab</title><main><h1>Execution Guard Lab</h1><p>Версия 1.0.2 · 23 вычислительных и 3 диагностических инструмента MCP</p></main></html>';
 
 function compute(kernel, raw, id, requestId) {
-  const reply = kernel.call(raw);
+  const reply = kernel.call(raw, requestId);
   if (reply.startsWith("-")) return toolError(id, reply.slice(1), requestId);
   if (!reply.startsWith("+{") || !reply.endsWith("}")) throw new Error("invalid_kernel_output");
   // Preserve the exact numeric lexemes in both wire results and the text block.
@@ -168,7 +168,7 @@ function admissionError(id, status, requestId) {
 export function createWorker(kernel) {
   let pending = 0;
 
-  async function call(request, env, payload, id, params) {
+  async function call(request, env, ctx, payload, id, params) {
     const requestId = crypto.randomUUID();
     const failed = () => rpcError(id, -32603, "Computation failed. Request ID " + requestId);
     const subject = request.headers.get("oai-authenticated-user-id")?.trim();
@@ -179,7 +179,7 @@ export function createWorker(kernel) {
     if (pending >= 4) return admissionError(id, 429, requestId);
     pending++;
     try {
-      const slot = await acquire(env.DB, requestId);
+      const slot = await acquire(env.DB, requestId, request.signal);
       if (slot.status !== 200) return admissionError(id, slot.status, requestId);
       let result;
       try {
@@ -194,7 +194,9 @@ export function createWorker(kernel) {
         result = failed();
       }
       try {
-        if (await slot.release()) return result;
+        const completing = slot.release();
+        ctx?.waitUntil?.(completing);
+        if (await completing) return result;
       } catch {
         // A lost D1 completion keeps its slot closed.
       }
@@ -205,7 +207,7 @@ export function createWorker(kernel) {
   }
 
   return {
-    async fetch(request, env = {}) {
+    async fetch(request, env = {}, ctx) {
       const { pathname } = new URL(request.url);
       if (request.method === "GET" && pathname === "/") {
         return new Response(home, { headers: { ...jsonHeaders, "content-type": "text/html; charset=utf-8",
@@ -246,7 +248,7 @@ export function createWorker(kernel) {
         case "tools/list":
           return rpc(id, { tools: toolSchemas });
         case "tools/call":
-          return call(request, env, payload, id, params);
+          return call(request, env, ctx, payload, id, params);
         default:
           return rpcError(id, -32601, "Method not found");
       }

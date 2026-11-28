@@ -5,6 +5,7 @@ const decoder = new TextDecoder("utf-8", { fatal: true });
 
 export function kernel(compiled, image) {
   let runtime;
+  let reportedMemory = 0;
   const closed = () => new OpenFile(new File([], { readonly: true }));
 
   function initialize() {
@@ -20,8 +21,9 @@ export function kernel(compiled, image) {
   }
 
   return {
-    call(raw) {
+    call(raw, requestId) {
       try {
+        const initializing = runtime === undefined;
         runtime ??= initialize();
         const bytes = encoder.encode(raw);
         const input = runtime.malloc(bytes.length);
@@ -31,6 +33,12 @@ export function kernel(compiled, image) {
           const ptr = runtime.lab_call(input, bytes.length);
           const len = runtime.lab_length();
           if (!ptr || len < 1 || len > 131073) throw new Error("invalid_kernel_response");
+          const memoryBytes = runtime.memory.buffer.byteLength;
+          if (initializing || memoryBytes > reportedMemory) {
+            reportedMemory = memoryBytes;
+            console.info(JSON.stringify({ event: "lab.wasm.memory", initialized: initializing,
+              wasm_bytes: memoryBytes, request_id: requestId }));
+          }
           return decoder.decode(new Uint8Array(runtime.memory.buffer, ptr, len));
         } finally {
           runtime.lab_release();

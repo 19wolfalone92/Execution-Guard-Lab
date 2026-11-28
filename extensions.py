@@ -1,5 +1,23 @@
 """Pure, bounded functions. No remote I/O, execution of input, or persistence."""
-import ast, base64, binascii, hashlib, io, statistics, zipfile, stat, zlib
+import ast, base64, binascii, hashlib, io, math, statistics, zipfile, stat, zlib
+
+def _scaled_integers(values):
+    """Represent a binary64 or integer vector exactly with one binary scale."""
+    ratios = [value.as_integer_ratio() for value in values]
+    scale = max(denominator for _, denominator in ratios)
+    return [numerator * (scale // denominator) for numerator, denominator in ratios], scale
+
+
+def _linear_terms(x, y):
+    xs, x_scale = _scaled_integers(x)
+    ys, y_scale = _scaled_integers(y)
+    n = len(xs)
+    sx, sy = sum(xs), sum(ys)
+    xx = n * sum(v * v for v in xs) - sx * sx
+    yy = n * sum(v * v for v in ys) - sy * sy
+    xy = n * sum(a * b for a, b in zip(xs, ys)) - sx * sy
+    return sx, sy, xx, yy, xy, x_scale, y_scale
+
 
 def install(register,obj,arr,string,enum,KEY,HEX):
     T={'type':'string'}; B={'type':'boolean'}; N={'type':'integer','minimum':0}; F={'type':'number'}
@@ -18,14 +36,24 @@ def install(register,obj,arr,string,enum,KEY,HEX):
     def correlation(x,y):
         if len(x)!=len(y):raise ValueError('length_mismatch')
         if min(x)==max(x) or min(y)==max(y):raise ValueError('constant_series')
-        return {'pearson_r':statistics.correlation(x,y),'count':len(x)}
+        _, _, xx, yy, xy, _, _ = _linear_terms(x, y)
+        numerator = xy * xy
+        denominator = xx * yy
+        # Scale before the square root so a small, representable correlation
+        # does not vanish when its square is too small for a float.
+        shift = (denominator.bit_length() - numerator.bit_length()) // 2 if xy else 0
+        r = math.ldexp(math.sqrt((numerator << (2 * shift)) / denominator), -shift)
+        return {'pearson_r': -r if xy < 0 else r, 'count': len(x)}
     reg('correlation_analyze','Pearson correlation; no causal inference.',obj(x=vector(2),y=vector(2)),obj(pearson_r=F,count=N),correlation)
     def regression(x,y):
         if len(x)!=len(y):raise ValueError('length_mismatch')
         if min(x)==max(x):raise ValueError('constant_predictor')
-        slope,intercept=statistics.linear_regression(x,y)
-        r2=None if min(y)==max(y) else statistics.correlation(x,y)**2
-        return {'slope':slope,'intercept':intercept,'r_squared':r2,'count':len(x)}
+        sx, sy, xx, yy, xy, x_scale, y_scale = _linear_terms(x, y)
+        slope = (xy * x_scale) / (xx * y_scale)
+        # Form the exact intercept numerator before converting to float.
+        intercept = (sy * xx - sx * xy) / (len(x) * xx * y_scale)
+        r2 = xy * xy / (xx * yy) if yy else None
+        return {'slope': slope, 'intercept': intercept, 'r_squared': r2, 'count': len(x)}
     reg('regression_analyze','Ordinary least squares with intercept; no forecast guarantee.',obj(x=vector(2),y=vector(2)),obj(slope=F,intercept=F,r_squared={'type':['number','null']},count=N),regression)
     def numerical(actual,expected,absolute_tolerance,relative_tolerance):
         delta=abs(actual-expected); limit=max(absolute_tolerance,relative_tolerance*max(abs(actual),abs(expected)))
